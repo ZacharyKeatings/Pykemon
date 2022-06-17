@@ -1,5 +1,4 @@
 from pokemon import Pokemon
-from battle import Battle
 import pygame
 
 pygame.init()
@@ -11,12 +10,6 @@ SCALE = 4
 CLOCK = pygame.time.Clock()
 FPS = 2
 
-window = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Pykemon")
-background = pygame.image.load('assets/battle1.png').convert_alpha()
-scaled_background = pygame.transform.scale(background, (background.get_width() * SCALE, background.get_height() * SCALE))
-font = pygame.font.Font('assets/font/pokemon_generation_1.ttf', 34)
-
 #colours
 BLACK = (0, 0, 0)
 RED = (248, 0, 0)
@@ -24,23 +17,24 @@ GREEN = (0, 184, 0)
 BLUE = (32, 136, 248)
 YELLOW = (248, 168, 0)
 
+#Game window
+window = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Pykemon")
+font = pygame.font.Font('assets/font/pokemon_generation_1.ttf', 34)
 
+#Battle state data
+background = pygame.image.load('assets/battle1.png').convert_alpha()
+scaled_background = pygame.transform.scale(background, (background.get_width() * SCALE, background.get_height() * SCALE))
+
+#Test Pokemon
 charmander = Pokemon("Charmander", ['Scratch', 'Tail Whip'])
 bulbasaur = Pokemon("Bulbasaur", ['Scratch', 'Tail Whip'])
 squirtle = Pokemon("Squirtle", ['Scratch', 'Tail Whip'])
 ivysaur = Pokemon("Venusaur", ['Scratch', 'Tail Whip'])
-
 ivysaur.curr_xp = 96
 ivysaur.set_level()
 ivysaur.level_up()
 ivysaur.currentHP = ivysaur.maxHP
-
-# xp_needed = ivysaur.next_level_xp - ivysaur.current_level_xp
-# xp_in_level = ivysaur.current_level_xp - ivysaur.curr_xp
-# to_next_level = xp_in_level / xp_needed
-# print(xp_needed)
-# print(xp_in_level)
-# print(to_next_level)
 
 
 def draw_bg():
@@ -81,6 +75,11 @@ def draw_xp_bar(pokemon, x, y):
 
     pygame.draw.rect(window, BLUE, (x, y, xp_bar_length(pokemon), 2 * SCALE))
 
+def draw_gender(pokemon, x, y):
+    gender = "m" if pokemon.gender == "Male" else "f"
+    img = font.render(gender, True, BLACK)
+    window.blit(img, (x, y))
+
 running = True
 while running:
 
@@ -92,12 +91,14 @@ while running:
     #foe
     draw_text(ivysaur.name.upper(), font, BLACK, 35, -3)
     draw_text(str(ivysaur.level), font, BLACK, 227, 27)
+    draw_gender(ivysaur, 322, 27)
     draw_hp_bar(ivysaur, 128, 75)
     draw_pokemon_front(ivysaur)
 
     #friend
     draw_text(ivysaur.name.upper(), font, BLACK, 320, 220)
-    draw_text(f"{str(ivysaur.level)}", font, BLACK, 482, 250)
+    draw_text(f"{str(ivysaur.level)}", font, BLACK, 482, 251)
+    draw_gender(ivysaur, 580, 251)
     draw_hp_bar(ivysaur, 384, 300)
     draw_xp_bar(ivysaur, 320, 365)
     draw_text(f"{str(ivysaur.currentHP)}/{str(ivysaur.maxHP)}", font, BLACK, 385, 315)
@@ -108,10 +109,3 @@ while running:
             running = False
 
     pygame.display.update()
-
-
-
-# attacker, defender = charmander, bulbasaur
-# fight = Battle(attacker, defender)
-# fight.battle_loop() pkmn
-

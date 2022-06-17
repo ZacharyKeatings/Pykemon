@@ -1,6 +1,6 @@
 from move import Move
-import pokemon
-import pygame
+from pokemon import Pokemon
+
 
 class Battle:
     def __init__(self, attacker, defender):
@@ -52,7 +52,7 @@ class Battle:
     def end_fight(self, attacker, defender):
         print(f"{defender.name} fainted!") #!----------------------------------
         print(f"previous xp: {attacker.curr_xp}") #!----------------------------
-        xp = pokemon.Pokemon.exp_gained(self, defender)
+        xp = Pokemon.exp_gained(self, defender)
         attacker.curr_xp += xp
         print(f"current xp: {attacker.curr_xp}") #!----------------------------
 
