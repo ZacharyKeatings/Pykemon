@@ -1,0 +1,234 @@
+{
+    "Grass": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Fire",
+            "Flying",
+            "Poison",
+            "Bug",
+            "Steel",
+            "Grass",
+            "Dragon"
+        ],
+        "Double_Damage_To": [
+            "Water",
+            "Ground",
+            "Rock"
+        ]
+    },
+    "Water": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Grass",
+            "Water",
+            "Dragon"
+        ],
+        "Double_Damage_To": [
+            "Fire",
+            "Ground",
+            "Rock"
+        ]
+    },
+    "Fire": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Water",
+            "Rock",
+            "Fire",
+            "Dragon"
+        ],
+        "Double_Damage_To": [
+            "Grass",
+            "Bug",
+            "Steel",
+            "Ice"
+        ]
+    },
+    "Fighting": {
+        "No_Damage_To": [
+            "Ghost"
+        ],
+        "Half_Damage_To": [
+            "Flying",
+            "Poison",
+            "Bug",
+            "Psychic"
+        ],
+        "Double_Damage_To": [
+            "Normal",
+            "Rock",
+            "Steel",
+            "Ice",
+            "Dark"
+        ]
+    },
+    "Flying": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Rock",
+            "Steel",
+            "Electric"
+        ],
+        "Double_Damage_To": [
+            "Fighting",
+            "Bug",
+            "Grass"
+        ]
+    },
+    "Poison": {
+        "No_Damage_To": [
+            "Steel"
+        ],
+        "Half_Damage_To": [
+            "Poison",
+            "Ground",
+            "Rock",
+            "Ghost"
+        ],
+        "Double_Damage_To": [
+            "Grass"
+        ]
+    },
+    "Normal": {
+        "No_Damage_To": [
+            "Ghost"
+        ],
+        "Half_Damage_To": [
+            "Rock",
+            "Steel"
+        ],
+        "Double_Damage_To": []
+    },
+    "Ground": {
+        "No_Damage_To": [
+            "Flying"
+        ],
+        "Half_Damage_To": [
+            "Bug",
+            "Grass"
+        ],
+        "Double_Damage_To": [
+            "Poison",
+            "Rock",
+            "Steel",
+            "Fire",
+            "Electric"
+        ]
+    },
+    "Rock": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Fighting",
+            "Ground"
+        ],
+        "Double_Damage_To": [
+            "Flying",
+            "Bug",
+            "Fire",
+            "Ice"
+        ]
+    },
+    "Bug": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Fighting",
+            "Flying",
+            "Poison",
+            "Ghost",
+            "Steel",
+            "Fire"
+        ],
+        "Double_Damage_To": [
+            "Grass",
+            "Psychic",
+            "Dark"
+        ]
+    },
+    "Ghost": {
+        "No_Damage_To": [
+            "Normal"
+        ],
+        "Half_Damage_To": [
+            "Dark"
+        ],
+        "Double_Damage_To": [
+            "Ghost",
+            "Psychic"
+        ]
+    },
+    "Steel": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Steel",
+            "Fire",
+            "Water",
+            "Electric"
+        ],
+        "Double_Damage_To": [
+            "Rock",
+            "Ice"
+        ]
+    },
+    "Electric": {
+        "No_Damage_To": [
+            "Ground"
+        ],
+        "Half_Damage_To": [
+            "Grass",
+            "Electric",
+            "Dragon"
+        ],
+        "Double_Damage_To": [
+            "Flying",
+            "Water"
+        ]
+    },
+    "Psychic": {
+        "No_Damage_To": [
+            "Dark"
+        ],
+        "Half_Damage_To": [
+            "Steel",
+            "Psychic"
+        ],
+        "Double_Damage_To": [
+            "Fighting",
+            "Poison"
+        ]
+    },
+    "Ice": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Steel",
+            "Fire",
+            "Water",
+            "Ice"
+        ],
+        "Double_Damage_To": [
+            "Flying",
+            "Ground",
+            "Grass",
+            "Dragon"
+        ]
+    },
+    "Dragon": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Steel"
+        ],
+        "Double_Damage_To": [
+            "Dragon"
+        ]
+    },
+    "Dark": {
+        "No_Damage_To": [],
+        "Half_Damage_To": [
+            "Fighting",
+            "Dark"
+        ],
+        "Double_Damage_To": [
+            "Ghost",
+            "Psychic"
+        ]
+    }
+}

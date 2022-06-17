@@ -1,0 +1,129 @@
+{
+    "Bulbasaur": {
+        "Base-Stats": {
+            "HP": 45,
+            "Attack": 49,
+            "Defense": 49,
+            "SpAtk": 65,
+            "SpDef": 65,
+            "Speed": 45
+        },
+        "Type": [
+            "Grass",
+            "Poison"
+        ],
+        "Moves": {
+            "Tackle": 1,
+            "Tail-Whip": 1,
+            "Scratch": 1
+        },
+        "Pokedex-Number": "001",
+        "Growth-Type": "Medium-Slow",
+        "Gender-Rate": {
+            "Male": 87.5,
+            "Female": 12.5
+        },
+        "Catch-Rate": 45,
+        "Evolves-From": "",
+        "Evolves-Into": "Ivysaur",
+        "Evolves-At": 16
+    },
+    "Ivysaur": {
+        "Base-Stats": {
+            "HP": 60,
+            "Attack": 62,
+            "Defense": 63,
+            "SpAtk": 80,
+            "SpDef": 80,
+            "Speed": 60
+        },
+        "Type": [
+            "Grass",
+            "Poison"
+        ],
+        "Moves": {
+            "Tackle": 1,
+            "Tail-Whip": 1,
+            "Scratch": 1
+        },
+        "Pokedex-Number": "002",
+        "Growth-Type": "Medium-Slow",
+        "Gender-Rate": {
+            "Male": 87.5,
+            "Female": 12.5
+        },
+        "Catch-Rate": 45,
+        "Evolves-From": "Bulbasaur",
+        "Evolves-Into": "Venusaur",
+        "Evolves-At": 32
+    },
+    "Venusaur": {
+        "Base-Stats": {
+            "HP": 80,
+            "Attack": 80,
+            "Defense": 80,
+            "SpAtk": 100,
+            "SpDef": 100,
+            "Speed": 80
+        },
+        "Type": [
+            "Grass",
+            "Poison"
+        ],
+        "Moves": {
+            "Tackle": 1,
+            "Tail-Whip": 1,
+            "Scratch": 1
+        },
+        "Pokedex-Number": "003",
+        "Growth-Type": "Medium-Slow",
+        "Gender-Rate": {
+            "Male": 87.5,
+            "Female": 12.5
+        },
+        "Catch-Rate": 45,
+        "Evolves-From": "Ivysaur",
+        "Evolves-Into": "",
+        "Evolves-At": 0
+    },
+    "Charmander": {
+        "Base-Stats": {
+            "HP": 39,
+            "Attack": 52,
+            "Defense": 43,
+            "SpAtk": 60,
+            "SpDef": 50,
+            "Speed": 65
+        },
+        "Type": [
+            "Fire"
+        ],
+        "Moves": [
+            "Tackle",
+            "Tail-Whip",
+            "Scratch"
+        ],
+        "Pokedex-Number" : "004",
+        "Growth-Type": "Erratic"
+    },
+    "Squirtle": {
+        "Base-Stats": {
+            "HP": 44,
+            "Attack": 48,
+            "Defense": 65,
+            "SpAtk": 50,
+            "SpDef": 50,
+            "Speed": 43
+        },
+        "Type": [
+            "Water"
+        ],
+        "Moves": [
+            "Tackle",
+            "Tail-Whip",
+            "Scratch"
+        ],
+        "Pokedex-Number" : "007",
+        "Growth-Type": "Medium-Slow"
+    }    
+}
