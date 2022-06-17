@@ -12,7 +12,7 @@ CLOCK = pygame.time.Clock()
 FPS = 2
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Pykthon")
+pygame.display.set_caption("Pykemon")
 background = pygame.image.load('assets/battle1.png').convert_alpha()
 scaled_background = pygame.transform.scale(background, (background.get_width() * SCALE, background.get_height() * SCALE))
 font = pygame.font.Font('assets/font/pokemon_generation_1.ttf', 34)
