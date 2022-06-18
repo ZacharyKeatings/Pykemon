@@ -27,9 +27,9 @@ background = pygame.image.load('assets/battle1.png').convert_alpha()
 scaled_background = pygame.transform.scale(background, (background.get_width() * SCALE, background.get_height() * SCALE))
 
 #Test Pokemon
-charmander = Pokemon("Charmander", ['Scratch', 'Tail Whip'])
+# charmander = Pokemon("Charmander", ['Scratch', 'Tail Whip'])
 bulbasaur = Pokemon("Bulbasaur", ['Scratch', 'Tail Whip'])
-squirtle = Pokemon("Squirtle", ['Scratch', 'Tail Whip'])
+# squirtle = Pokemon("Squirtle", ['Scratch', 'Tail Whip'])
 ivysaur = Pokemon("Venusaur", ['Scratch', 'Tail Whip'])
 ivysaur.curr_xp = 96
 ivysaur.set_level()

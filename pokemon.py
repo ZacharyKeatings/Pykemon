@@ -8,9 +8,9 @@ type_dict = load_json("typeDB")
 move_dict = load_json("moveDB")
 
 class Pokemon:
-    def __init__(self, name, moves):
+    def __init__(self, name):
         self.name = name
-        self.moves = moves
+        self.moves = None
         self.type = pkmn_dict[self.name]["Type"]
         self.gender = Pokemon.set_gender(self)
         self.pokedex_number = pkmn_dict[self.name]["Pokedex-Number"]
@@ -65,19 +65,26 @@ class Pokemon:
         self.leech_seed = False
         self.sleep = False
 
-        #Images
-        back = pygame.image.load(f'assets/images/pokemon/back-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
-        self.battle_back = pygame.transform.scale(back, (192, 192))
-        self.back_rect = self.battle_back.get_rect()
-        self.back_rect.center = (160, 288)
-        front = pygame.image.load(f'assets/images/pokemon/front-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
-        self.battle_front = pygame.transform.scale(front, (224, 224))
-        self.front_rect = self.battle_front.get_rect()
-        self.front_rect.center = (496, 112)
+        # #Images
+        # #back
+        # back = pygame.image.load(f'assets/images/pokemon/back-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
+        # self.battle_back = pygame.transform.scale(back, (192, 192))
+        # self.back_rect = self.battle_back.get_rect()
+        # self.back_rect.center = (160, 288)
+        # #front
+        # front = pygame.image.load(f'assets/images/pokemon/front-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
+        # self.battle_front = pygame.transform.scale(front, (224, 224))
+        # self.front_rect = self.battle_front.get_rect()
+        # self.front_rect.center = (496, 112)
 
     def set_gender(self):
-        gender = random.choice(['Male', 'Female'])
-        return gender
+        '''
+        Sets gender based on gender rate frequency in pokemon stats
+        '''
+        if random.randint(0, 1001) < (pkmn_dict[self.name]["Gender-Rate"]["Male"] * 10):
+            return "Male"
+        else:
+            return "Female"
 
     def random_ivs(self):
         '''
@@ -133,6 +140,9 @@ class Pokemon:
         return int(hp)
 
     def set_level(self):
+        '''
+        Compares current xp and pokemon growth type and returns current level
+        '''
 
         def erratic(level):
             if level < 50:
@@ -312,11 +322,15 @@ class Pokemon:
         return int(xp_gained)
 
     def is_shiny(self):
+        '''
+        If pokemon stats are specific numbers, make them shiny. shiny is just a visual perk.
+        '''
+
         shiny = False
         if self.ivs['Attack'] in (2, 3, 6, 7, 10, 11, 14, 15):
             if self.ivs['Defense'] == 10:
                 if self.ivs['Speed'] == 10:
-                    if self.ivs['Special-Attack'] or self.ivs['Special-Defense'] == 10:
+                    if self.ivs['Special-Attack'] == 10 or self.ivs['Special-Defense'] == 10:
                         shiny = True
         return shiny
 
@@ -331,6 +345,10 @@ class Pokemon:
             return False
 
     def level_up(self):
+        '''
+        recalculate stats based on new level
+        '''
+
         self.attack = Pokemon.calc_stats(self, self.base_attack, self.ivs['Attack'], Pokemon.stat_point(self, self.attack_xp))
         self.defense = Pokemon.calc_stats(self, self.base_defense, self.ivs['Defense'], Pokemon.stat_point(self, self.defense_xp))
         self.spatk = Pokemon.calc_stats(self, self.base_spatk, self.ivs['Special-Attack'], Pokemon.stat_point(self, self.spatk_xp))
@@ -339,7 +357,11 @@ class Pokemon:
         self.maxHP = Pokemon.calc_hp(self, self.base_hp, self.ivs['HP'], Pokemon.stat_point(self, self.hp_xp))
 
     def evolve(self):
+        '''
+        recalculates base stats based on new species
+        '''
         # self.moves = moves
+        self.name = pkmn_dict[self.name]["Evolves-Into"]
         self.type = pkmn_dict[self.name]["Type"]
         self.pokedex_number = pkmn_dict[self.name]["Pokedex-Number"]
         self.base_hp = pkmn_dict[self.name]["Base-Stats"]["HP"]
@@ -350,4 +372,21 @@ class Pokemon:
         self.base_speed = pkmn_dict[self.name]["Base-Stats"]["Speed"]
         Pokemon.level_up(self)
         
+    def set_moves(self):
+        '''
+        assigns move set for wild pokemon based on level. most recent 4 moves are assigned
+        '''
+        move_set = []
+
+
+# print(pkmn_dict["Bulbasaur"]["Moves"])
+# for index, move in enumerate(pkmn_dict["Bulbasaur"]["Moves"]):
+#     print(move, pkmn_dict["Bulbasaur"]["Moves"][move])
+    # print(index, move)
+
+bulbasaur = Pokemon("Bulbasaur")
+print(bulbasaur.moves)
+
+move_set = []
+
 
