@@ -14,8 +14,8 @@
         ],
         "Moves": {
             "Tackle": 1,
-            "Tail-Whip": 1,
-            "Scratch": 1
+            "Tail Whip": 2,
+            "Scratch": 3
         },
         "Pokedex-Number": "001",
         "Growth-Type": "Medium-Slow",

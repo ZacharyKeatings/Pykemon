@@ -65,17 +65,17 @@ class Pokemon:
         self.leech_seed = False
         self.sleep = False
 
-        # #Images
-        # #back
-        # back = pygame.image.load(f'assets/images/pokemon/back-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
-        # self.battle_back = pygame.transform.scale(back, (192, 192))
-        # self.back_rect = self.battle_back.get_rect()
-        # self.back_rect.center = (160, 288)
-        # #front
-        # front = pygame.image.load(f'assets/images/pokemon/front-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
-        # self.battle_front = pygame.transform.scale(front, (224, 224))
-        # self.front_rect = self.battle_front.get_rect()
-        # self.front_rect.center = (496, 112)
+        #!Images
+        #back
+        back = pygame.image.load(f'assets/images/pokemon/back-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
+        self.battle_back = pygame.transform.scale(back, (288, 288))
+        self.back_rect = self.battle_back.get_rect()
+        self.back_rect.center = (160, 288)
+        #front
+        front = pygame.image.load(f'assets/images/pokemon/front-{"shiny" if self.shiny else "normal"}/{self.pokedex_number}{self.name.lower()}.png').convert_alpha()
+        self.battle_front = pygame.transform.scale(front, (224, 224))
+        self.front_rect = self.battle_front.get_rect()
+        self.front_rect.center = (496, 112)
 
     def set_gender(self):
         '''
@@ -374,19 +374,23 @@ class Pokemon:
         
     def set_moves(self):
         '''
-        assigns move set for wild pokemon based on level. most recent 4 moves are assigned
+        assigns move set for wild pokemon based on level. 4 most recent moves are assigned
         '''
+
+        possible_moves = []
         move_set = []
 
+        #fill possible_moves with all moves available at pokemon current level:
+        for index, move in enumerate(pkmn_dict[self.name]['Moves']):
+            if pkmn_dict[self.name]['Moves'][move] <= self.level:
+                possible_moves.append(move)
 
-# print(pkmn_dict["Bulbasaur"]["Moves"])
-# for index, move in enumerate(pkmn_dict["Bulbasaur"]["Moves"]):
-#     print(move, pkmn_dict["Bulbasaur"]["Moves"][move])
-    # print(index, move)
+        #Create list no longer than 4:
+        for move in range(0, len(possible_moves)):
+            if move == 4:
+                break
+            else:
+                move_set.append(possible_moves[-abs(move+1)])
 
-bulbasaur = Pokemon("Bulbasaur")
-print(bulbasaur.moves)
-
-move_set = []
-
-
+        #set pokemon moves with move_set:
+        self.moves = move_set
