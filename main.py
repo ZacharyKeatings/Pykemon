@@ -1,5 +1,7 @@
 from pokemon import Pokemon
+from battle import Battle
 import pygame
+import random
 
 pygame.init()
 
@@ -8,7 +10,7 @@ WIDTH = 640
 HEIGHT = 576
 SCALE = 4
 CLOCK = pygame.time.Clock()
-FPS = 2
+FPS = 1
 
 #!colours
 BLACK = (0, 0, 0)
@@ -27,18 +29,27 @@ background = pygame.image.load('assets/battle1.png').convert_alpha()
 scaled_background = pygame.transform.scale(background, (background.get_width() * SCALE, background.get_height() * SCALE))
 
 #!Test Pokemon
-# charmander = Pokemon("Charmander", ['Scratch', 'Tail Whip'])
 bulbasaur = Pokemon("Bulbasaur")
-# squirtle = Pokemon("Squirtle", ['Scratch', 'Tail Whip'])
-ivysaur = Pokemon("Bulbasaur")
-ivysaur.curr_xp = 0
+bulbasaur.curr_xp = 2000
+bulbasaur.set_level()
+bulbasaur.level_up()
+bulbasaur.set_moves()
+bulbasaur.currentHP = bulbasaur.maxHP
+
+ivysaur = Pokemon("Ivysaur")
+ivysaur.curr_xp = 2000
 ivysaur.set_level()
 ivysaur.level_up()
-
 ivysaur.set_moves()
-print(ivysaur.moves)
-# ivysaur.currentHP = ivysaur.maxHP
+ivysaur.currentHP = ivysaur.maxHP
 
+venusaur = Pokemon("Venusaur")
+venusaur.curr_xp = 1600
+venusaur.set_level()
+venusaur.level_up()
+venusaur.set_moves()
+venusaur.currentHP = venusaur.maxHP
+#!-------------------
 
 def draw_bg():
     window.blit(scaled_background, (0, 0))
@@ -91,14 +102,14 @@ while running:
     #!All game code here
     draw_bg()
 
-    #!foe
-    draw_text(ivysaur.name.upper(), font, BLACK, 35, -3)
-    draw_text(str(ivysaur.level), font, BLACK, 227, 27)
-    draw_gender(ivysaur, 322, 27)
-    draw_hp_bar(ivysaur, 128, 75)
-    draw_pokemon_front(ivysaur)
+    #!Defender
+    draw_text(venusaur.name.upper(), font, BLACK, 35, -3)
+    draw_text(str(venusaur.level), font, BLACK, 227, 27)
+    draw_gender(venusaur, 322, 27)
+    draw_hp_bar(venusaur, 128, 75)
+    draw_pokemon_front(venusaur)
 
-    #!friend
+    #!Attacker
     draw_text(ivysaur.name.upper(), font, BLACK, 320, 220)
     draw_text(f"{str(ivysaur.level)}", font, BLACK, 482, 251)
     draw_gender(ivysaur, 580, 251)
@@ -106,6 +117,8 @@ while running:
     draw_xp_bar(ivysaur, 320, 365)
     draw_text(f"{str(ivysaur.currentHP)}/{str(ivysaur.maxHP)}", font, BLACK, 385, 315)
     draw_pokemon_back(ivysaur)
+
+    Battle(ivysaur, venusaur).fight()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

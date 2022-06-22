@@ -24,6 +24,8 @@ class Move:
         self.effect_rate = move_dict[self.name]["Effect-Rate"]
         self.stat_stage = move_dict[self.name]["Stat-Stage"]
 
+    def get_priority(self):
+        return self.priority
 
     def paralyzed(self, defender):
         '''
@@ -64,7 +66,7 @@ class Move:
         '''
         Pokemon cannot use move on their next turn.
         '''
-        print(f"{defender.name} Flinched!")
+        print(f"{defender.name} Flinched!")#!------------------------------
 
     def confused(self, defender):
         '''
@@ -167,7 +169,7 @@ class Move:
         '''
         Checks if move applies any status effect to defending pokemon
         '''
-        print("In apply_effects")
+        print("In apply_effects")#!-----------------------------------
         chance = random.randint(0, 101)
         if chance < move_dict[self.name]["Effect-Rate"]:
             if move_dict[self.name]["Effect"] == "Paralyzed":
@@ -198,10 +200,8 @@ class Move:
         '''
         Move.apply_effects(self, defender)
         damage = Move.calc_damage(self, attacker, defender)
-        print(damage)
+        print(damage) #!-----------------------------
         defender.currentHP -= damage
-        if pokemon.Pokemon.is_fainted(defender):
-            battle.Battle.end_fight(self, attacker, defender)
 
     def learn(self, pokemon):
         '''

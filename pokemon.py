@@ -305,12 +305,12 @@ class Pokemon:
                          ~pkmn in party: pkmn that battled * 2 * num of pkmn in party 
         '''
 
-        self.hp_xp += enemy.hp_xp
-        self.attack_xp += enemy.attack_xp
-        self.defense_xp += enemy.defense_xp
-        self.spatk_xp += enemy.spatk_xp
-        self.spdef_xp += enemy.spdef_xp
-        self.speed_xp += enemy.speed_xp
+        self.hp_xp += enemy.base_hp
+        self.attack_xp += enemy.base_attack
+        self.defense_xp += enemy.base_defense
+        self.spatk_xp += enemy.base_spatk
+        self.spdef_xp += enemy.base_spdef
+        self.speed_xp += enemy.base_speed
 
         a = 1 if enemy.wild else 1.5
         t = 1.5 if self.traded else 1
