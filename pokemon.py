@@ -186,56 +186,33 @@ class Pokemon:
         possible_level = 1
         if pkmn_dict[self.name]["Growth-Type"] == "Erratic":
             while level_matching:
-                exp = erratic(possible_level)
-                if exp > self.curr_xp:
-                    if possible_level > 1:
-                        self.level = possible_level - 1
-                        self.current_level_xp = exp
-                        self.next_level_xp = erratic(possible_level + 1)
-                        level_matching = False
-                    else:
-                        self.level = possible_level
-                        self.current_level_xp = exp
-                        self.next_level_xp = erratic(possible_level + 1)
-                        level_matching = False
-                else:
+                if erratic(possible_level) < self.curr_xp >= erratic(possible_level+1): #curr_xp is more than current and next level
                     possible_level += 1
+                if erratic(possible_level) <= self.curr_xp < erratic(possible_level+1): #curr_xp 
+                    self.level = possible_level
+                    self.current_level_xp = erratic(possible_level)
+                    self.next_level_xp = erratic(possible_level + 1)
+                    level_matching = False
         if pkmn_dict[self.name]["Growth-Type"] == "Fast":
             while level_matching:
-                exp = fast(possible_level)
-                if exp > self.curr_xp:
-                    if possible_level > 1:
-                        self.level = possible_level - 1
-                        self.current_level_xp = exp
-                        self.next_level_xp = fast(possible_level + 1)
-                        level_matching = False
-                    else:
-                        self.level = possible_level
-                        self.current_level_xp = exp
-                        self.next_level_xp = fast(possible_level + 1)
-                        level_matching = False
-                else:
+                if fast(possible_level) < self.curr_xp >= fast(possible_level+1): #curr_xp is more than current and next level
                     possible_level += 1
+                if fast(possible_level) <= self.curr_xp < fast(possible_level+1): #curr_xp 
+                    self.level = possible_level
+                    self.current_level_xp = fast(possible_level)
+                    self.next_level_xp = fast(possible_level + 1)
+                    level_matching = False
         if pkmn_dict[self.name]["Growth-Type"] == "Medium-Fast":
             while level_matching:
-                exp = medium_fast(possible_level)
-                if exp > self.curr_xp:
-                    if possible_level > 1:
-                        self.level = possible_level - 1
-                        self.current_level_xp = exp
-                        self.next_level_xp = medium_fast(possible_level + 1)
-                        level_matching = False
-                    else:
-                        self.level = possible_level
-                        self.current_level_xp = exp
-                        self.next_level_xp = medium_fast(possible_level + 1)
-                        level_matching = False
-                else:
+                if medium_fast(possible_level) < self.curr_xp >= medium_fast(possible_level+1): #curr_xp is more than current and next level
                     possible_level += 1
+                if medium_fast(possible_level) <= self.curr_xp < medium_fast(possible_level+1): #curr_xp 
+                    self.level = possible_level
+                    self.current_level_xp = medium_fast(possible_level)
+                    self.next_level_xp = medium_fast(possible_level + 1)
+                    level_matching = False
         if pkmn_dict[self.name]["Growth-Type"] == "Medium-Slow":
             while level_matching:
-                exp = medium_slow(possible_level)
-                print(f"{exp=} {possible_level=}")
                 if medium_slow(possible_level) < self.curr_xp >= medium_slow(possible_level+1): #curr_xp is more than current and next level
                     possible_level += 1
                 if medium_slow(possible_level) <= self.curr_xp < medium_slow(possible_level+1): #curr_xp 
@@ -243,52 +220,24 @@ class Pokemon:
                     self.current_level_xp = medium_slow(possible_level)
                     self.next_level_xp = medium_slow(possible_level + 1)
                     level_matching = False
-
-                # if exp > self.curr_xp:
-                #     if possible_level == 1:
-                #         self.level = possible_level
-                #         self.current_level_xp = medium_slow(possible_level)
-                #         self.next_level_xp = medium_slow(possible_level + 1)
-                #         level_matching = False
-                #     elif possible_level > 1:
-                #         self.level = possible_level - 1
-                #         self.current_level_xp = medium_slow(possible_level - 1)
-                #         self.next_level_xp = medium_slow(possible_level)
-                #         level_matching = False
-                # else:
-                #     possible_level += 1
         if pkmn_dict[self.name]["Growth-Type"] == "Slow":
             while level_matching:
-                exp = slow(possible_level)
-                if exp > self.curr_xp:
-                    if possible_level > 1:
-                        self.level = possible_level - 1
-                        self.current_level_xp = exp
-                        self.next_level_xp = slow(possible_level + 1)
-                        level_matching = False
-                    else:
-                        self.level = possible_level
-                        self.current_level_xp = exp
-                        self.next_level_xp = slow(possible_level + 1)
-                        level_matching = False
-                else:
+                if slow(possible_level) < self.curr_xp >= slow(possible_level+1): #curr_xp is more than current and next level
                     possible_level += 1
+                if slow(possible_level) <= self.curr_xp < slow(possible_level+1): #curr_xp 
+                    self.level = possible_level
+                    self.current_level_xp = slow(possible_level)
+                    self.next_level_xp = slow(possible_level + 1)
+                    level_matching = False
         if pkmn_dict[self.name]["Growth-Type"] == "Fluctuating":
             while level_matching:
-                exp = fluctuating(possible_level)
-                if exp > self.curr_xp:
-                    if possible_level > 1:
-                        self.level = possible_level - 1
-                        self.current_level_xp = exp
-                        self.next_level_xp = fluctuating(possible_level + 1)
-                        level_matching = False
-                    else:
-                        self.level = possible_level
-                        self.current_level_xp = exp
-                        self.next_level_xp = fluctuating(possible_level + 1)
-                        level_matching = False
-                else:
+                if fluctuating(possible_level) < self.curr_xp >= fluctuating(possible_level+1): #curr_xp is more than current and next level
                     possible_level += 1
+                if fluctuating(possible_level) <= self.curr_xp < fluctuating(possible_level+1): #curr_xp 
+                    self.level = possible_level
+                    self.current_level_xp = fluctuating(possible_level)
+                    self.next_level_xp = fluctuating(possible_level + 1)
+                    level_matching = False
 
     #! Add xp. all calc once items are introduced
     def exp_gained(self, enemy):
