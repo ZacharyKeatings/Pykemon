@@ -83,8 +83,5 @@ class Battle:
                 break
 
     def end_fight(self, attacker, defender):
-        print(f"{defender.name} fainted!") #!----------------------------------
-        print(f"previous xp: {attacker.curr_xp}") #!----------------------------
         xp = attacker.exp_gained(defender)
         attacker.curr_xp += xp
-        print(f"current xp: {attacker.curr_xp}") #!----------------------------

@@ -34,10 +34,12 @@ bulbasaur.curr_xp = 2000
 bulbasaur.set_level()
 bulbasaur.level_up()
 bulbasaur.set_moves()
+num_moves = len(bulbasaur.moves)
+print(num_moves)
 bulbasaur.currentHP = bulbasaur.maxHP
 
 ivysaur = Pokemon("Ivysaur")
-ivysaur.curr_xp = 2000
+ivysaur.curr_xp = 3000
 ivysaur.set_level()
 ivysaur.level_up()
 ivysaur.set_moves()

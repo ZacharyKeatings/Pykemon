@@ -19,13 +19,20 @@ class Game():
             'right': False,
             'up': False,
             'down': False,
-            'start': False
+            'select': False,
+            'back': False
         }
+        self.BLACK = (0, 0, 0)
+        self.RED = (248, 0, 0)
+        self.GREEN = (0, 184, 0)
+        self.BLUE = (32, 136, 248)
+        self.YELLOW = (248, 168, 0)
+
         self.dt, self.prev_time = 0, 0
         self.state_stack = []
         self.load_assets()
         self.load_states()
-        # self.SCALE = 4
+        self.SCALE = 4
 
     def game_loop(self):
         while self.playing:
@@ -52,7 +59,9 @@ class Game():
                 if event.key == pygame.K_RIGHT:
                     self.actions['right'] = True
                 if event.key == pygame.K_RETURN:
-                    self.actions['start'] = True
+                    self.actions['select'] = True
+                if event.key == pygame.K_BACKSPACE:
+                    self.actions['back'] = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
@@ -64,7 +73,9 @@ class Game():
                 if event.key == pygame.K_RIGHT:
                     self.actions['right'] = False
                 if event.key == pygame.K_RETURN:
-                    self.actions['start'] = False
+                    self.actions['select'] = False
+                if event.key == pygame.K_BACKSPACE:
+                    self.actions['back'] = False
 
     def update(self):
         self.state_stack[-1].update(self.dt, self.actions)
@@ -80,16 +91,16 @@ class Game():
         self.prev_time = now
 
     def draw_text(self, surface, text, colour, x, y):
-        text_surface = self.font.render(text, True, colour)
+        text_surface = self.font.render(text, False, colour)
         text_rect = text_surface.get_rect()
-        text_rect.center = (x, y)
+        text_rect = (x, y)
         surface.blit(text_surface, text_rect)
 
     def load_assets(self):
         self.assets_dir = os.path.join("assets")
         self.images_dir = os.path.join(self.assets_dir, "images")
         self.font_dir = os.path.join(self.assets_dir, "font")
-        self.font = pygame.font.Font(os.path.join(self.font_dir, "pokemon_generation_1.ttf"), 34)
+        self.font = pygame.font.Font(os.path.join(self.font_dir, "pokemon_generation_1.ttf"), 32)
 
     def load_states(self):
         self.title_screen = Title(self)

@@ -156,7 +156,7 @@
         "Stat-Stage": 0
     },
     "Scratch": {
-        "Type": "Normal",
+        "Type": "Dark",
         "Damage-Class": "Physical",
         "PP": 35,
         "Max-PP": 40,
@@ -180,7 +180,7 @@
         "Effect_Rate": 0
     },
     "Tail Whip": {
-        "Type": "Normal",
+        "Type": "Grass",
         "Damage-Class": "Physical",
         "PP": 35,
         "Max-PP": 40,

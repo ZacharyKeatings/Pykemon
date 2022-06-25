@@ -1,6 +1,5 @@
 from settings import load_json
 import pokemon
-import battle
 import random
 
 type_dict = load_json("typeDB")
@@ -26,6 +25,9 @@ class Move:
 
     def get_priority(self):
         return self.priority
+
+    def get_type(self):
+        return self.type
 
     def paralyzed(self, defender):
         '''
@@ -169,7 +171,6 @@ class Move:
         '''
         Checks if move applies any status effect to defending pokemon
         '''
-        print("In apply_effects")#!-----------------------------------
         chance = random.randint(0, 101)
         if chance < move_dict[self.name]["Effect-Rate"]:
             if move_dict[self.name]["Effect"] == "Paralyzed":
@@ -198,9 +199,9 @@ class Move:
         calls a move.
         runs status effect check, if applicable. then applies damage, if applicable
         '''
-        Move.apply_effects(self, defender)
+        if move_dict[self.name]["Effect"] != "":
+            Move.apply_effects(self, defender)
         damage = Move.calc_damage(self, attacker, defender)
-        print(damage) #!-----------------------------
         defender.currentHP -= damage
 
     def learn(self, pokemon):
