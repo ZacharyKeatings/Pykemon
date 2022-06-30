@@ -22,6 +22,7 @@ class Move:
         self.effect = move_dict[self.name]["Effect"]
         self.effect_rate = move_dict[self.name]["Effect-Rate"]
         self.stat_stage = move_dict[self.name]["Stat-Stage"]
+        self.landed_crit = False
 
     def get_priority(self):
         return self.priority
@@ -138,8 +139,10 @@ class Move:
     def crit_hit(self, attacker):
         is_crit = random.randint(0, attacker.speed)
         if is_crit > (attacker.speed/2):
+            self.landed_crit = True
             return 1.5
         else:
+            self.landed_crit = False
             return 1
 
     def calc_damage(self, attacker, defender):
@@ -199,10 +202,12 @@ class Move:
         calls a move.
         runs status effect check, if applicable. then applies damage, if applicable
         '''
-        if move_dict[self.name]["Effect"] != "":
+        if self.effect != "":
             Move.apply_effects(self, defender)
         damage = Move.calc_damage(self, attacker, defender)
+        # defender.transitionHP = defender.currentHP
         defender.currentHP -= damage
+
 
     def learn(self, pokemon):
         '''

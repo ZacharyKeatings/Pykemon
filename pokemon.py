@@ -36,6 +36,7 @@ class Pokemon:
 
         #Current stats
         self.curr_xp = 0
+        self.transition_xp = self.curr_xp
         self.level = 1
         self.current_level_xp = 0
         self.next_level_xp = 0
@@ -47,10 +48,19 @@ class Pokemon:
         self.speed = Pokemon.calc_stats(self, self.base_speed, self.ivs['Speed'], Pokemon.stat_point(self, self.speed_xp))
         self.maxHP = Pokemon.calc_hp(self, self.base_hp, self.ivs['HP'], Pokemon.stat_point(self, self.hp_xp))
         self.currentHP = self.maxHP
+        self.transitionHP = self.currentHP
         self.evasion = 1
         self.wild = False
         self.traded = False
         self.held_item = None
+        self.move_1_pp = 0
+        self.move_1_maxpp = 0
+        self.move_2_pp = 0
+        self.move_2_maxpp = 0
+        self.move_3_pp = 0
+        self.move_3_maxpp = 0
+        self.move_4_pp = 0
+        self.move_4_maxpp = 0
 
         #Status effects
         self.status_effect = False # Set to True if any other status effect is True
