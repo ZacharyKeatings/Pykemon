@@ -37,10 +37,14 @@ class Battle(State):
         # friend fainted
         
         self.menu_state = 'main'
-        self.cursor_on_move = 0
+        self.index = 0
+        #Which move did each Pokemon select
         self.selected_friend_move = None
         self.selected_foe_move = None
-        self.index = 0
+        #Who goes first, who goes second
+        self.first_move = None
+        self.second_move = None
+        #Who already made a move?
         self.friend_moved = False
         self.foe_moved = False
 
@@ -51,20 +55,20 @@ class Battle(State):
         self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
         #!Test Pokemon
-        self.bulbasaur = Pokemon("Bulbasaur")
-        self.bulbasaur.curr_xp = 2000
-        self.bulbasaur.transition_xp = 2000
-        self.bulbasaur.set_level()
-        self.bulbasaur.level_up()
-        self.bulbasaur.set_moves()
-        self.bulbasaur.currentHP = self.bulbasaur.maxHP
+        self.friend = Pokemon("Bulbasaur")
+        self.friend.curr_xp = 2000
+        self.friend.transition_xp = 2000
+        self.friend.set_level()
+        self.friend.level_up()
+        self.friend.set_moves()
+        self.friend.currentHP = self.friend.maxHP
 
-        self.ivysaur = Pokemon("Ivysaur")
-        self.ivysaur.curr_xp = 3000
-        self.ivysaur.set_level()
-        self.ivysaur.level_up()
-        self.ivysaur.set_moves()
-        self.ivysaur.currentHP = self.ivysaur.maxHP
+        self.foe = Pokemon("Ivysaur")
+        self.foe.curr_xp = 3000
+        self.foe.set_level()
+        self.foe.level_up()
+        self.foe.set_moves()
+        self.foe.currentHP = self.foe.maxHP
 
         # self.venusaur = Pokemon("Venusaur")
         # self.venusaur.curr_xp = 1600
@@ -79,8 +83,11 @@ class Battle(State):
         if actions['select']:
             if self.menu_state == 'main':
                 if self.index == 0: #fight
-                    self.menu_state = 'fight'
-                    self.cursor_rect.x, self.cursor_rect.y = self.scaled_battle_move_menu_rect.x + (40 * self.game.SCALE), self.scaled_battle_move_menu_rect.y + (38 * self.game.SCALE)
+                    if self.friend.is_fainted():
+                        self.menu_state = 'friend fainted'
+                    else:
+                        self.menu_state = 'fight'
+                        self.cursor_rect.x, self.cursor_rect.y = self.scaled_battle_move_menu_rect.x + (40 * self.game.SCALE), self.scaled_battle_move_menu_rect.y + (38 * self.game.SCALE)
                 if self.index == 1: #pack
                     pass
                 if self.index == 2: #pkmn
@@ -89,15 +96,40 @@ class Battle(State):
                     self.menu_state = 'escape'
 
             elif self.menu_state == 'fight':
-                self.battle_loop()
+                self.new_turn()
+                self.set_moves()
+                self.move_order()
+                if self.first_move == self.friend:
+                    self.menu_state = 'friend used move'
 
-            elif self.menu_state == 'friend moved':
+                if self.first_move == self.foe:
+                    self.menu_state = 'foe used move'
+
+            elif self.menu_state == 'friend used move':
                 # switch to critical hit, effectiveness, foe move or move menu
-                pass
+                self.selected_friend_move.use(self.friend, self.foe)
+                self.friend_moved = True
+                if self.foe.is_fainted():
+                    self.menu_state = 'foe fainted'
+                elif self.foe_moved == False:
+                    self.menu_state == 'foe used move'
+                elif self.foe.is_fainted():
+                    self.menu_state = 'main'
+                else:
+                    self.menu_state = 'fight'
 
-            elif self.menu_state == 'foe moved':
+            elif self.menu_state == 'foe used move':
                 # switch to critical hit, effectiveness, friend move or move menu
-                pass
+                self.selected_foe_move.use(self.foe, self.friend)
+                self.foe_moved = True
+                if self.friend.is_fainted():
+                    self.menu_state = 'friend fainted'
+                elif self.friend_moved == False:
+                    self.menu_state = 'friend used move'
+                elif self.friend.is_fainted():
+                    self.menu_state = 'main'
+                else:
+                    self.menu_state = 'fight'
 
             elif self.menu_state == 'critical hit':
                 # switch to move effectiveness, opponent move, or move menu
@@ -106,6 +138,16 @@ class Battle(State):
             elif self.menu_state == 'move effectiveness':
                 # switch to  opponent move or move menu
                 pass
+
+            elif self.menu_state =='friend fainted':
+                self.menu_state = 'main'
+                self.index = 0
+                self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
+            elif self.menu_state =='foe fainted':
+                self.menu_state = 'main'
+                self.index = 0
+                self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
             elif self.menu_state == 'escape':
                 # switch to  opponent move or move menu
@@ -124,19 +166,20 @@ class Battle(State):
         if self.menu_state == 'main':
             display.blit(self.scaled_main_battle_menu, self.scaled_main_battle_menu_rect)
         elif self.menu_state == 'friend fainted':
-            self.game.draw_text(display, f"{self.bulbasaur.name.upper()} fainted!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"{self.friend.name.upper()} fainted!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
         elif self.menu_state == 'foe fainted':
-            self.game.draw_text(display, f"{self.ivysaur.name.upper()} fainted!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
-        elif self.menu_state == '':
-            pass
-        elif self.menu_state == '':
-            pass
+            self.game.draw_text(display, f"{self.foe.name.upper()} fainted!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+        elif self.menu_state == 'friend used move':
+            self.game.draw_text(display, f"{self.friend.name.upper()} used {self.selected_friend_move.name}!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+        elif self.menu_state == 'foe used move':
+            self.game.draw_text(display, f"{self.foe.name.upper()} used {self.selected_foe_move.name}!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
         elif self.menu_state == '':
             pass
         elif self.menu_state == '':
             pass
         elif self.menu_state == 'escape':
             self.escape(display)
+
         self.draw_foe(display)
         self.draw_friend(display)
 
@@ -184,20 +227,20 @@ class Battle(State):
         self.game.draw_text(display, gender, self.game.BLACK, x, y)
 
     def draw_foe(self, display):
-        display.blit(self.ivysaur.battle_front, self.ivysaur.front_rect)
-        self.draw_gender(display, self.ivysaur, 320, 32)
-        self.draw_hp_bar(display, self.ivysaur, 128, 76)
-        self.game.draw_text(display, self.ivysaur.name.upper(), self.game.BLACK, 36, 0)
-        self.game.draw_text(display, str(self.ivysaur.level), self.game.BLACK, 228, 28)
+        display.blit(self.foe.battle_front, self.foe.front_rect)
+        self.draw_gender(display, self.foe, 320, 32)
+        self.draw_hp_bar(display, self.foe, 128, 76)
+        self.game.draw_text(display, self.foe.name.upper(), self.game.BLACK, 36, 0)
+        self.game.draw_text(display, str(self.foe.level), self.game.BLACK, 228, 28)
 
     def draw_friend(self, display):
-        display.blit(self.bulbasaur.battle_back, self.bulbasaur.back_rect)
-        self.draw_hp_bar(display, self.bulbasaur, 384, 300)
-        self.draw_xp_bar(display, self.bulbasaur, 320, 365)
-        self.draw_gender(display, self.bulbasaur, 580, 256)
-        self.game.draw_text(display, self.bulbasaur.name.upper(), self.game.BLACK, 320, 224)
-        self.game.draw_text(display, str(self.bulbasaur.level), self.game.BLACK, 484, 252)
-        self.game.draw_text(display, f"{self.bulbasaur.transitionHP}/{self.bulbasaur.maxHP}", self.game.BLACK, 384, 320)
+        display.blit(self.friend.battle_back, self.friend.back_rect)
+        self.draw_hp_bar(display, self.friend, 384, 300)
+        self.draw_xp_bar(display, self.friend, 320, 365)
+        self.draw_gender(display, self.friend, 580, 256)
+        self.game.draw_text(display, self.friend.name.upper(), self.game.BLACK, 320, 224)
+        self.game.draw_text(display, str(self.friend.level), self.game.BLACK, 484, 252)
+        self.game.draw_text(display, f"{self.friend.transitionHP}/{self.friend.maxHP}", self.game.BLACK, 384, 320)
 
         if self.menu_state == 'main':
             display.blit(self.scaled_cursor_img, self.cursor_rect)
@@ -206,18 +249,17 @@ class Battle(State):
             display.blit(self.scaled_cursor_img, self.cursor_rect)
 
             # Move list
-            num_moves = len(self.bulbasaur.moves)
-            for index, move in enumerate(self.bulbasaur.moves):
+            num_moves = len(self.friend.moves)
+            for index, move in enumerate(self.friend.moves):
                 self.game.draw_text(display, move.upper(), self.game.BLACK, self.scaled_battle_move_menu_rect.x + (48*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (37*self.game.SCALE) + (32*index))
-            for blank_move in range(len(self.bulbasaur.moves), 4):
+            for blank_move in range(len(self.friend.moves), 4):
                 self.game.draw_text(display, "-", self.game.BLACK, self.scaled_battle_move_menu_rect.x + (48*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (37*self.game.SCALE) + (32*blank_move))
 
             # Move type
-            self.game.draw_text(display, Move(self.bulbasaur.moves[self.cursor_on_move]).get_type().upper(), self.game.BLACK, self.scaled_battle_move_menu_rect.x + (16*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (13*self.game.SCALE))
+            self.game.draw_text(display, Move(self.friend.moves[self.index]).get_type().upper(), self.game.BLACK, self.scaled_battle_move_menu_rect.x + (16*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (13*self.game.SCALE))
 
     def escape(self, display):
-        self.game.draw_text(display, f"{self.bulbasaur.name.upper()} ran away!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
-
+        self.game.draw_text(display, f"Got away safely!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
 
     def new_turn(self):
         if self.friend_moved is True and self.foe_moved is True:
@@ -225,62 +267,83 @@ class Battle(State):
             self.foe_moved = False
 
     def set_moves(self):
-        self.selected_friend_move = Move(self.bulbasaur.moves[self.index])
-        self.selected_foe_move = Move(random.choice(self.ivysaur.moves))
+        self.selected_friend_move = Move(self.friend.moves[self.index])
+        self.selected_foe_move = Move(random.choice(self.foe.moves))
 
+    def move_order(self):
+        if self.selected_friend_move.get_priority() > self.selected_foe_move.get_priority():
+            self.first_move = self.friend
+            self.second_move = self.foe
+
+        if self.selected_friend_move.get_priority() < self.selected_foe_move.get_priority():
+            self.first_move = self.foe
+            self.second_move = self.friend
+
+        if self.selected_friend_move.get_priority() == self.selected_foe_move.get_priority():
+            if self.friend.speed >= self.foe.speed:
+                self.first_move = self.friend
+                self.second_move = self.foe
+            else:
+                self.first_move = self.foe
+                self.second_move = self.friend
+
+    #!
     def check_priority(self):
         if self.selected_friend_move.get_priority() > self.selected_foe_move.get_priority():
             if not self.friend_moved:
-                self.selected_friend_move.use(self.bulbasaur, self.ivysaur)
+                self.selected_friend_move.use(self.friend, self.foe)
                 self.friend_moved = True
 
         if self.selected_friend_move.get_priority() < self.selected_foe_move.get_priority():
             if not self.foe_moved:
-                self.selected_foe_move.use(self.bulbasaur, self.ivysaur)
+                self.selected_foe_move.use(self.friend, self.foe)
                 self.foe_moved = True
 
         if self.selected_friend_move.get_priority() == self.selected_foe_move.get_priority():
             self.check_speed()
 
+    #!
     def check_speed(self):
-        if self.bulbasaur.speed >= self.ivysaur.speed:
+        if self.friend.speed >= self.foe.speed:
             if not self.friend_moved:
-                self.selected_friend_move.use(self.bulbasaur, self.ivysaur)
+                self.selected_friend_move.use(self.friend, self.foe)
                 self.friend_moved = True
 
-        if self.bulbasaur.speed < self.ivysaur.speed:
+        if self.friend.speed < self.foe.speed:
             if not self.foe_moved:
-                self.selected_foe_move.use(self.ivysaur, self.bulbasaur)
+                self.selected_foe_move.use(self.foe, self.friend)
                 self.foe_moved = True
 
+    #!
     def check_effectiveness(self, pokemon):
-        friend_effectiveness = self.selected_friend_move.effectiveness(self.ivysaur)
-        foe_effectiveness = self.selected_foe_move.effectiveness(self.bulbasaur)
-        if pokemon == self.bulbasaur:
+        friend_effectiveness = self.selected_friend_move.effectiveness(self.foe)
+        foe_effectiveness = self.selected_foe_move.effectiveness(self.friend)
+        if pokemon == self.friend:
             return friend_effectiveness
-        elif pokemon == self.ivysaur:
+        elif pokemon == self.foe:
             return foe_effectiveness
 
     def end_battle(self):
-        if self.bulbasaur.is_fainted():
+        if self.friend.is_fainted():
             self.menu_state = 'friend fainted'
             self.selected_friend_move = None
             self.selected_foe_move = None
-        if self.ivysaur.is_fainted():
+        if self.foe.is_fainted():
             self.menu_state = 'foe fainted'
             self.selected_friend_move = None
             self.selected_foe_move = None
 
+    #!
     def battle_loop(self):
         self.new_turn()
         self.set_moves()
         self.check_priority()
         # self.check_effectiveness()
-        if self.friend_moved is True and not self.ivysaur.is_fainted():
-            self.selected_foe_move.use(self.ivysaur, self.bulbasaur)
+        if self.friend_moved is True and not self.foe.is_fainted():
+            self.selected_foe_move.use(self.foe, self.friend)
             self.foe_moved = True
-        elif self.foe_moved is True and not self.bulbasaur.is_fainted():
-            self.selected_friend_move.use(self.bulbasaur, self.ivysaur)
+        elif self.foe_moved is True and not self.friend.is_fainted():
+            self.selected_friend_move.use(self.friend, self.foe)
         self.end_battle()
 
     def update_cursor(self, actions):
@@ -315,7 +378,7 @@ class Battle(State):
                     self.cursor_rect.x = self.cursor_rect.x + (48 * self.game.SCALE)
         if self.menu_state == 'fight':
             if actions['down']:
-                if self.index < len(self.bulbasaur.moves)-1:
+                if self.index < len(self.friend.moves)-1:
                     self.index += 1
                     self.cursor_rect.y = self.cursor_rect.y + (8 * self.game.SCALE)
             if actions['up']:

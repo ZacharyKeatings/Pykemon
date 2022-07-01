@@ -207,6 +207,8 @@ class Move:
         damage = Move.calc_damage(self, attacker, defender)
         # defender.transitionHP = defender.currentHP
         defender.currentHP -= damage
+        if defender.currentHP < 0:
+            defender.currentHP = 0
 
 
     def learn(self, pokemon):

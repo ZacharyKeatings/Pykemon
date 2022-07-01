@@ -298,7 +298,6 @@ class Pokemon:
         Checks if pokemon is fainted. returns True if fainted.
         '''
         if self.currentHP <= 0:
-            self.currentHP = 0
             return True
         else:
             return False
