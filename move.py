@@ -210,7 +210,6 @@ class Move:
         if defender.currentHP < 0:
             defender.currentHP = 0
 
-
     def learn(self, pokemon):
         '''
         If Pokemon levels up and can learn a new move, add move to move_list if len < 4. if >= 4, ask to forget one move.
