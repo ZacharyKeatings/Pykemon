@@ -25,16 +25,6 @@ class Battle(State):
 
         #State data
         self.main_battle_menu_options = {0: "Fight", 1: "Pack", 2: "Pkmn", 3: "Run"}
-        # menu states: 
-        # main
-        # fight
-        # choose move
-        # friend moved
-        # move effectiveness
-        # foe moved
-        # critical hit
-        # foe fainted
-        # friend fainted
         
         self.menu_state = 'main'
         self.index = 0
@@ -56,15 +46,15 @@ class Battle(State):
 
         #!Test Pokemon
         self.friend = Pokemon("Bulbasaur")
-        self.friend.curr_xp = 2000
-        self.friend.transition_xp = 2000
+        self.friend.curr_xp = 200000
+        self.friend.transition_xp = 200000
         self.friend.set_level()
         self.friend.level_up()
         self.friend.set_moves()
         self.friend.currentHP = self.friend.maxHP
 
         self.foe = Pokemon("Ivysaur")
-        self.foe.curr_xp = 3000
+        self.foe.curr_xp = 300000
         self.foe.set_level()
         self.foe.level_up()
         self.foe.set_moves()
@@ -109,31 +99,47 @@ class Battle(State):
                 # switch to critical hit, effectiveness, foe move or move menu
                 self.selected_friend_move.use(self.friend, self.foe)
                 self.friend_moved = True
-                if self.foe.is_fainted():
-                    self.menu_state = 'foe fainted'
-                elif self.foe_moved == False:
-                    self.menu_state == 'foe used move'
-                elif self.foe.is_fainted():
-                    self.menu_state = 'main'
+                if self.selected_friend_move.landed_crit:
+                    self.menu_state = 'friend critical hit'
                 else:
-                    self.menu_state = 'fight'
+                    if self.foe.is_fainted():
+                        self.menu_state = 'foe fainted'
+                    elif self.foe_moved == False:
+                        self.menu_state == 'foe used move'
+                    else:
+                        self.menu_state = 'fight'
 
             elif self.menu_state == 'foe used move':
                 # switch to critical hit, effectiveness, friend move or move menu
                 self.selected_foe_move.use(self.foe, self.friend)
                 self.foe_moved = True
+                if self.selected_foe_move.landed_crit:
+                    self.menu_state = 'foe critical hit'
+                else:
+                    if self.friend.is_fainted():
+                        self.menu_state = 'friend fainted'
+                    elif self.friend_moved == False:
+                        self.menu_state = 'friend used move'
+                    else:
+                        self.menu_state = 'fight'
+
+            elif self.menu_state == 'friend critical hit':
+                # switch to move effectiveness, opponent move, or move menu
+                if self.foe.is_fainted():
+                    self.menu_state = 'foe fainted'
+                elif self.foe_moved == False:
+                    self.menu_state == 'foe used move'
+                else:
+                    self.menu_state = 'fight'
+
+            elif self.menu_state == 'foe critical hit':
+                # switch to move effectiveness, opponent move, or move menu
                 if self.friend.is_fainted():
                     self.menu_state = 'friend fainted'
                 elif self.friend_moved == False:
                     self.menu_state = 'friend used move'
-                elif self.friend.is_fainted():
-                    self.menu_state = 'main'
                 else:
                     self.menu_state = 'fight'
-
-            elif self.menu_state == 'critical hit':
-                # switch to move effectiveness, opponent move, or move menu
-                pass
 
             elif self.menu_state == 'move effectiveness':
                 # switch to  opponent move or move menu
@@ -150,7 +156,6 @@ class Battle(State):
                 self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
             elif self.menu_state == 'escape':
-                # switch to  opponent move or move menu
                 self.game.playing = False
                 self.game.running = False
 
@@ -165,20 +170,31 @@ class Battle(State):
         display.blit(self.scaled_background_img, (0,0))
         if self.menu_state == 'main':
             display.blit(self.scaled_main_battle_menu, self.scaled_main_battle_menu_rect)
+
         elif self.menu_state == 'friend fainted':
-            self.game.draw_text(display, f"{self.friend.name.upper()} fainted!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"fainted!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
         elif self.menu_state == 'foe fainted':
-            self.game.draw_text(display, f"{self.foe.name.upper()} fainted!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"fainted!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+        
         elif self.menu_state == 'friend used move':
-            self.game.draw_text(display, f"{self.friend.name.upper()} used {self.selected_friend_move.name}!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"used {self.selected_friend_move.name.upper()}!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+        
         elif self.menu_state == 'foe used move':
-            self.game.draw_text(display, f"{self.foe.name.upper()} used {self.selected_foe_move.name}!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
-        elif self.menu_state == '':
-            pass
-        elif self.menu_state == '':
-            pass
+            self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"used {self.selected_foe_move.name.upper()}!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+        
         elif self.menu_state == 'escape':
             self.escape(display)
+        
+        elif self.menu_state == 'friend critical hit' or self.menu_state == 'foe critical hit':
+            self.game.draw_text(display, "A critical hit!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+
+        elif self.menu_state == '':
+            pass
 
         self.draw_foe(display)
         self.draw_friend(display)
@@ -323,6 +339,7 @@ class Battle(State):
         elif pokemon == self.foe:
             return foe_effectiveness
 
+    #!
     def end_battle(self):
         if self.friend.is_fainted():
             self.menu_state = 'friend fainted'
