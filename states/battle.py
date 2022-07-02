@@ -102,7 +102,9 @@ class Battle(State):
                 if self.selected_friend_move.landed_crit:
                     self.menu_state = 'friend critical hit'
                 else:
-                    if self.foe.is_fainted():
+                    if self.selected_friend_move.effectiveness(self.foe) != 1:
+                        self.menu_state = 'friend effectiveness'
+                    elif self.foe.is_fainted():
                         self.menu_state = 'foe fainted'
                     elif self.foe_moved == False:
                         self.menu_state == 'foe used move'
@@ -116,7 +118,9 @@ class Battle(State):
                 if self.selected_foe_move.landed_crit:
                     self.menu_state = 'foe critical hit'
                 else:
-                    if self.friend.is_fainted():
+                    if self.selected_foe_move.effectiveness(self.friend) != 1:
+                        self.menu_state = 'foe effectiveness'
+                    elif self.friend.is_fainted():
                         self.menu_state = 'friend fainted'
                     elif self.friend_moved == False:
                         self.menu_state = 'friend used move'
@@ -125,7 +129,9 @@ class Battle(State):
 
             elif self.menu_state == 'friend critical hit':
                 # switch to move effectiveness, opponent move, or move menu
-                if self.foe.is_fainted():
+                if self.selected_friend_move.effectiveness(self.foe) != 1:
+                    self.menu_state = 'friend effectiveness'
+                elif self.foe.is_fainted():
                     self.menu_state = 'foe fainted'
                 elif self.foe_moved == False:
                     self.menu_state == 'foe used move'
@@ -134,16 +140,32 @@ class Battle(State):
 
             elif self.menu_state == 'foe critical hit':
                 # switch to move effectiveness, opponent move, or move menu
-                if self.friend.is_fainted():
+                if self.selected_foe_move.effectiveness(self.friend) != 1:
+                    self.menu_state = 'foe effectiveness'
+                elif self.friend.is_fainted():
                     self.menu_state = 'friend fainted'
                 elif self.friend_moved == False:
                     self.menu_state = 'friend used move'
                 else:
                     self.menu_state = 'fight'
 
-            elif self.menu_state == 'move effectiveness':
+            elif self.menu_state == 'friend effectiveness':
                 # switch to  opponent move or move menu
-                pass
+                if self.foe.is_fainted():
+                    self.menu_state = 'foe fainted'
+                elif self.foe_moved == False:
+                    self.menu_state = 'foe used move'
+                else:
+                    self.menu_state = 'fight'
+
+            elif self.menu_state == 'foe effectiveness':
+                # switch to  opponent move or move menu
+                if self.friend.is_fainted():
+                    self.menu_state = 'friend fainted'
+                elif self.friend_moved == False:
+                    self.menu_state = 'friend used move'
+                else:
+                    self.menu_state = 'fight'
 
             elif self.menu_state =='friend fainted':
                 self.menu_state = 'main'
@@ -187,11 +209,27 @@ class Battle(State):
             self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
             self.game.draw_text(display, f"used {self.selected_foe_move.name.upper()}!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
         
-        elif self.menu_state == 'escape':
-            self.escape(display)
-        
         elif self.menu_state == 'friend critical hit' or self.menu_state == 'foe critical hit':
             self.game.draw_text(display, "A critical hit!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+
+        elif self.menu_state == 'friend effectiveness':
+            if self.selected_friend_move.effectiveness(self.foe) > 1:
+                self.game.draw_text(display, "It's super", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+                self.game.draw_text(display, "effective!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+            elif self.selected_friend_move.effectiveness(self.foe) < 1:
+                self.game.draw_text(display, "It's not very", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+                self.game.draw_text(display, "effective...", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'foe effectiveness':
+            if self.selected_foe_move.effectiveness(self.friend) > 1:
+                self.game.draw_text(display, "It's super", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+                self.game.draw_text(display, "effective!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+            elif self.selected_foe_move.effectiveness(self.friend) < 1:
+                self.game.draw_text(display, "It's not very", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+                self.game.draw_text(display, "effective...", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+        
+        elif self.menu_state == 'escape':
+            self.escape(display)
 
         elif self.menu_state == '':
             pass
