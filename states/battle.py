@@ -44,7 +44,7 @@ class Battle(State):
         self.cursor_rect = self.scaled_cursor_img.get_rect()
         self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
-        #!Test Pokemon
+        #!Test Pokemon--------
         self.friend = Pokemon("Bulbasaur")
         self.friend.curr_xp = 200000
         self.friend.transition_xp = 200000
@@ -88,16 +88,20 @@ class Battle(State):
             elif self.menu_state == 'fight':
                 self.new_turn()
                 self.set_moves()
-                self.move_order()
-                if self.first_move == self.friend:
-                    self.menu_state = 'friend used move'
+                if self.selected_friend_move.curr_pp <= 0:
+                    self.menu_state = 'no pp left'
+                else:
+                    self.move_order()
+                    if self.first_move == self.friend:
+                        self.menu_state = 'friend used move'
 
-                if self.first_move == self.foe:
-                    self.menu_state = 'foe used move'
+                    if self.first_move == self.foe:
+                        self.menu_state = 'foe used move'
 
             elif self.menu_state == 'friend used move':
                 # switch to critical hit, effectiveness, foe move or move menu
                 self.selected_friend_move.use(self.friend, self.foe)
+                self.selected_friend_move.curr_pp -= 1
                 self.friend_moved = True
                 if self.selected_friend_move.landed_crit:
                     self.menu_state = 'friend critical hit'
@@ -177,6 +181,9 @@ class Battle(State):
                 self.index = 0
                 self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
+            elif self.menu_state == 'no pp left':
+                self.menu_state = 'fight'
+
             elif self.menu_state == 'escape':
                 self.game.playing = False
                 self.game.running = False
@@ -228,11 +235,11 @@ class Battle(State):
                 self.game.draw_text(display, "It's not very", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
                 self.game.draw_text(display, "effective...", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
         
+        elif self.menu_state == 'no pp left':
+            self.game.draw_text(display, "No pp left!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+
         elif self.menu_state == 'escape':
             self.escape(display)
-
-        elif self.menu_state == '':
-            pass
 
         self.draw_foe(display)
         self.draw_friend(display)
@@ -294,7 +301,7 @@ class Battle(State):
         self.draw_gender(display, self.friend, 580, 256)
         self.game.draw_text(display, self.friend.name.upper(), self.game.BLACK, 320, 224)
         self.game.draw_text(display, str(self.friend.level), self.game.BLACK, 484, 252)
-        self.game.draw_text(display, f"{self.friend.transitionHP}/{self.friend.maxHP}", self.game.BLACK, 384, 320)
+        self.game.draw_text(display, f"{self.friend.transitionHP}/{self.friend.maxHP}", self.game.BLACK, 576, 320, alignment='right')
 
         if self.menu_state == 'main':
             display.blit(self.scaled_cursor_img, self.cursor_rect)
@@ -305,12 +312,13 @@ class Battle(State):
             # Move list
             num_moves = len(self.friend.moves)
             for index, move in enumerate(self.friend.moves):
-                self.game.draw_text(display, move.upper(), self.game.BLACK, self.scaled_battle_move_menu_rect.x + (48*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (37*self.game.SCALE) + (32*index))
+                self.game.draw_text(display, move.name.upper(), self.game.BLACK, self.scaled_battle_move_menu_rect.x + (48*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (37*self.game.SCALE) + (32*index))
             for blank_move in range(len(self.friend.moves), 4):
                 self.game.draw_text(display, "-", self.game.BLACK, self.scaled_battle_move_menu_rect.x + (48*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (37*self.game.SCALE) + (32*blank_move))
 
             # Move type
-            self.game.draw_text(display, Move(self.friend.moves[self.index]).get_type().upper(), self.game.BLACK, self.scaled_battle_move_menu_rect.x + (16*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (13*self.game.SCALE))
+            self.game.draw_text(display, self.friend.moves[self.index].type.upper(), self.game.BLACK, self.scaled_battle_move_menu_rect.x + (16*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (13*self.game.SCALE))
+            self.game.draw_text(display, f"{self.friend.moves[self.index].curr_pp}/{self.friend.moves[self.index].pp}", self.game.BLACK, self.scaled_battle_move_menu_rect.x + (80*self.game.SCALE), self.scaled_battle_move_menu_rect.y + (21*self.game.SCALE), alignment='right')
 
     def escape(self, display):
         self.game.draw_text(display, f"Got away safely!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
@@ -321,8 +329,10 @@ class Battle(State):
             self.foe_moved = False
 
     def set_moves(self):
-        self.selected_friend_move = Move(self.friend.moves[self.index])
-        self.selected_foe_move = Move(random.choice(self.foe.moves))
+        self.selected_friend_move = self.friend.moves[self.index]
+        if self.selected_friend_move.curr_pp <= 0:
+            self.menu_state = 'no pp left'
+        self.selected_foe_move = self.foe.moves[random.randint(0, len(self.foe.moves)-1)]
 
     def move_order(self):
         if self.selected_friend_move.get_priority() > self.selected_foe_move.get_priority():
@@ -340,66 +350,6 @@ class Battle(State):
             else:
                 self.first_move = self.foe
                 self.second_move = self.friend
-
-    #!
-    def check_priority(self):
-        if self.selected_friend_move.get_priority() > self.selected_foe_move.get_priority():
-            if not self.friend_moved:
-                self.selected_friend_move.use(self.friend, self.foe)
-                self.friend_moved = True
-
-        if self.selected_friend_move.get_priority() < self.selected_foe_move.get_priority():
-            if not self.foe_moved:
-                self.selected_foe_move.use(self.friend, self.foe)
-                self.foe_moved = True
-
-        if self.selected_friend_move.get_priority() == self.selected_foe_move.get_priority():
-            self.check_speed()
-
-    #!
-    def check_speed(self):
-        if self.friend.speed >= self.foe.speed:
-            if not self.friend_moved:
-                self.selected_friend_move.use(self.friend, self.foe)
-                self.friend_moved = True
-
-        if self.friend.speed < self.foe.speed:
-            if not self.foe_moved:
-                self.selected_foe_move.use(self.foe, self.friend)
-                self.foe_moved = True
-
-    #!
-    def check_effectiveness(self, pokemon):
-        friend_effectiveness = self.selected_friend_move.effectiveness(self.foe)
-        foe_effectiveness = self.selected_foe_move.effectiveness(self.friend)
-        if pokemon == self.friend:
-            return friend_effectiveness
-        elif pokemon == self.foe:
-            return foe_effectiveness
-
-    #!
-    def end_battle(self):
-        if self.friend.is_fainted():
-            self.menu_state = 'friend fainted'
-            self.selected_friend_move = None
-            self.selected_foe_move = None
-        if self.foe.is_fainted():
-            self.menu_state = 'foe fainted'
-            self.selected_friend_move = None
-            self.selected_foe_move = None
-
-    #!
-    def battle_loop(self):
-        self.new_turn()
-        self.set_moves()
-        self.check_priority()
-        # self.check_effectiveness()
-        if self.friend_moved is True and not self.foe.is_fainted():
-            self.selected_foe_move.use(self.foe, self.friend)
-            self.foe_moved = True
-        elif self.foe_moved is True and not self.friend.is_fainted():
-            self.selected_friend_move.use(self.friend, self.foe)
-        self.end_battle()
 
     def update_cursor(self, actions):
         if self.menu_state == 'main':

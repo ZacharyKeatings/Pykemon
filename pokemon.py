@@ -2,6 +2,7 @@ from settings import load_json
 import random
 from cmath import sqrt
 import pygame
+from move import Move
 
 pkmn_dict = load_json("pokemonDB")
 type_dict = load_json("typeDB")
@@ -53,14 +54,6 @@ class Pokemon:
         self.wild = False
         self.traded = False
         self.held_item = None
-        self.move_1_pp = 0
-        self.move_1_maxpp = 0
-        self.move_2_pp = 0
-        self.move_2_maxpp = 0
-        self.move_3_pp = 0
-        self.move_3_maxpp = 0
-        self.move_4_pp = 0
-        self.move_4_maxpp = 0
 
         #Status effects
         self.status_effect = False # Set to True if any other status effect is True
@@ -341,7 +334,7 @@ class Pokemon:
         #fill possible_moves with all moves available at pokemon current level:
         for index, move in enumerate(pkmn_dict[self.name]['Moves']):
             if pkmn_dict[self.name]['Moves'][move] <= self.level:
-                possible_moves.append(move)
+                possible_moves.append(Move(move))
 
         #Create list no longer than 4:
         for move in range(0, len(possible_moves)):

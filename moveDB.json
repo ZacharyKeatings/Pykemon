@@ -156,7 +156,7 @@
         "Stat-Stage": 0
     },
     "Scratch": {
-        "Type": "Fire",
+        "Type": "Normal",
         "Damage-Class": "Physical",
         "PP": 35,
         "Max-PP": 40,
@@ -193,7 +193,7 @@
         "Stat-Stage": 0
     },
     "Tackle": {
-        "Type": "Water",
+        "Type": "Normal",
         "Damage-Class": "Physical",
         "PP": 25,
         "Max-PP": 40,

@@ -1,5 +1,4 @@
 from settings import load_json
-import pokemon
 import random
 
 type_dict = load_json("typeDB")
@@ -14,6 +13,7 @@ class Move:
         self.type = move_dict[self.name]["Type"]
         self.damage_class = move_dict[self.name]["Damage-Class"]
         self.pp = move_dict[self.name]["PP"]
+        self.curr_pp = self.pp
         self.max_pp = move_dict[self.name]["Max-PP"]
         self.power = move_dict[self.name]["Power"]
         self.accuracy = move_dict[self.name]["Accuracy"]
@@ -27,8 +27,8 @@ class Move:
     def get_priority(self):
         return self.priority
 
-    def get_type(self):
-        return self.type
+    # def get_type(self):
+    #     return self.type
 
     def paralyzed(self, defender):
         '''

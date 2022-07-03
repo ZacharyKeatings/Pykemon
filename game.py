@@ -45,7 +45,7 @@ class Game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
-                
+
                 self.running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -91,11 +91,19 @@ class Game():
         self.dt = now - self.prev_time
         self.prev_time = now
 
-    def draw_text(self, surface, text, colour, x, y):
+    def draw_text(self, surface, text, colour, x, y, alignment=None):
         text_surface = self.font.render(text, False, colour)
         text_rect = text_surface.get_rect()
-        text_rect = (x, y)
-        surface.blit(text_surface, text_rect)
+        if alignment is None:
+            text_rect = (x, y)
+            surface.blit(text_surface, text_rect)
+        elif alignment == 'right':
+            text_rect.right = x
+            text_rect.top = y
+            surface.blit(text_surface, text_rect)
+        elif alignment == 'center':
+            text_rect.center = (x, y)
+            surface.blit(text_surface, text_rect)
 
     def load_assets(self):
         self.assets_dir = os.path.join("assets")
