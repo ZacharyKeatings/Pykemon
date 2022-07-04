@@ -103,33 +103,39 @@ class Battle(State):
                 self.selected_friend_move.use(self.friend, self.foe)
                 self.selected_friend_move.curr_pp -= 1
                 self.friend_moved = True
-                if self.selected_friend_move.landed_crit:
-                    self.menu_state = 'friend critical hit'
+                if self.selected_friend_move.move_missed == True:
+                    self.menu_state = 'friend missed'
                 else:
-                    if self.selected_friend_move.effectiveness(self.foe) != 1:
-                        self.menu_state = 'friend effectiveness'
-                    elif self.foe.is_fainted():
-                        self.menu_state = 'foe fainted'
-                    elif self.foe_moved == False:
-                        self.menu_state == 'foe used move'
+                    if self.selected_friend_move.landed_crit:
+                        self.menu_state = 'friend critical hit'
                     else:
-                        self.menu_state = 'fight'
+                        if self.selected_friend_move.effectiveness(self.foe) != 1:
+                            self.menu_state = 'friend effectiveness'
+                        elif self.foe.is_fainted():
+                            self.menu_state = 'foe fainted'
+                        elif self.foe_moved == False:
+                            self.menu_state == 'foe used move'
+                        else:
+                            self.menu_state = 'fight'
 
             elif self.menu_state == 'foe used move':
                 # switch to critical hit, effectiveness, friend move or move menu
                 self.selected_foe_move.use(self.foe, self.friend)
                 self.foe_moved = True
-                if self.selected_foe_move.landed_crit:
-                    self.menu_state = 'foe critical hit'
+                if self.selected_foe_move.move_missed == True:
+                    self.menu_state = 'foe missed'
                 else:
-                    if self.selected_foe_move.effectiveness(self.friend) != 1:
-                        self.menu_state = 'foe effectiveness'
-                    elif self.friend.is_fainted():
-                        self.menu_state = 'friend fainted'
-                    elif self.friend_moved == False:
-                        self.menu_state = 'friend used move'
+                    if self.selected_foe_move.landed_crit:
+                        self.menu_state = 'foe critical hit'
                     else:
-                        self.menu_state = 'fight'
+                        if self.selected_foe_move.effectiveness(self.friend) != 1:
+                            self.menu_state = 'foe effectiveness'
+                        elif self.friend.is_fainted():
+                            self.menu_state = 'friend fainted'
+                        elif self.friend_moved == False:
+                            self.menu_state = 'friend used move'
+                        else:
+                            self.menu_state = 'fight'
 
             elif self.menu_state == 'friend critical hit':
                 # switch to move effectiveness, opponent move, or move menu
@@ -182,6 +188,12 @@ class Battle(State):
                 self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
             elif self.menu_state == 'no pp left':
+                self.menu_state = 'fight'
+
+            elif self.menu_state == 'friend missed':
+                self.menu_state = 'fight'
+
+            elif self.menu_state == 'foe missed':
                 self.menu_state = 'fight'
 
             elif self.menu_state == 'escape':
@@ -237,6 +249,12 @@ class Battle(State):
         
         elif self.menu_state == 'no pp left':
             self.game.draw_text(display, "No pp left!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+
+        elif self.menu_state == 'friend missed':
+            self.game.draw_text(display, f"{self.friend.name.upper()} missed!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+
+        elif self.menu_state == 'foe missed':
+            self.game.draw_text(display, f"{self.foe.name.upper()} missed!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
 
         elif self.menu_state == 'escape':
             self.escape(display)

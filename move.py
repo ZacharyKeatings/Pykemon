@@ -22,14 +22,14 @@ class Move:
         self.effect = move_dict[self.name]["Effect"]
         self.effect_rate = move_dict[self.name]["Effect-Rate"]
         self.stat_stage = move_dict[self.name]["Stat-Stage"]
+        self.crit_threshold = None
         self.landed_crit = False
+        self.move_missed = False
 
     def get_priority(self):
         return self.priority
 
-    # def get_type(self):
-    #     return self.type
-
+#!
     def paralyzed(self, defender):
         '''
         pokemon has 25% chance of not being able to attack.
@@ -37,6 +37,7 @@ class Move:
         '''
         pass
 
+#!
     def poisoned(self, defender):
         '''
         Pokemon loses 1/16 of maxHP each turn.
@@ -44,6 +45,7 @@ class Move:
         '''
         pass
 
+#!
     def badly_poisoned(self, defender):
         '''
         Pokemon loses 1/16 of maxHP on first turn. Each sequential turn, add 1/16 of maxHP to damage.
@@ -51,6 +53,7 @@ class Move:
         '''
         pass
 
+#!
     def burned(self, defender):
         '''
         Pokemon loses 1/8 of maxHP at the end of each turn.
@@ -58,6 +61,7 @@ class Move:
         '''
         pass
 
+#!
     def frozen(self, defender):
         '''
         Pokemon cannot attack, but has 20% chance each turn to remove effect.
@@ -65,12 +69,14 @@ class Move:
         '''
         pass
 
+#!
     def flinch(self, defender):
         '''
         Pokemon cannot use move on their next turn.
         '''
         print(f"{defender.name} Flinched!")#!------------------------------
 
+#!
     def confused(self, defender):
         '''
         Pokemon has 50% chance of hurting themselves between 1-4 turns.
@@ -78,6 +84,7 @@ class Move:
         '''
         pass
 
+#!
     def infatuation(self, defender):
         '''
         Pokemon has 50% chance of becoming infatuated.
@@ -85,24 +92,28 @@ class Move:
         '''
         pass
 
+#!
     def leech_seed(self, defender):
         '''
         Pokemon loses 1/16 of maxHP each turn, and the active Pokemon heals HP for damage amount.
         '''
         pass
 
+#!
     def sleep(self, defender):
         '''
         Pokemon is asleep and cannot use any move between 1 - 7 turns.
         '''
         pass
 
+#!
     def raise_stat(self, defender):
         '''
         Increases stat of Pokemon
         '''
         pass
 
+#!
     def lower_stat(self, defender):
         '''
         Decreases stat of Pokemon
@@ -137,14 +148,24 @@ class Move:
 
 #! Update Crit to calculate based on pokemon stat crit stage to work with stat modifier moves
     def crit_hit(self, attacker):
-        is_crit = random.randint(0, attacker.speed)
-        if is_crit > (attacker.speed/2):
+        self.crit_threshold = attacker.speed / 2
+        if self.crit_threshold > 255:
+            self.crit_threshold = 255
+        rand_num = random.randint(0, 256)
+
+        if rand_num < self.crit_threshold:
             self.landed_crit = True
-            return 1.5
         else:
             self.landed_crit = False
-            return 1
 
+    def miss_check(self):
+        rand_num = random.randint(0, 101)
+        if rand_num > self.accuracy:
+            self.move_missed = True
+        else:
+            self.move_missed = False
+
+#! Update to properly use critical hit
     def calc_damage(self, attacker, defender):
         '''
         ((((2 * Level / 5 + 2) * AttackStat * AttackPower / DefenseStat) / 50) + 2) * STAB * Weakness/Resistance * Random(85-100) / 100
@@ -162,14 +183,19 @@ class Move:
         elif self.damage_class == "Special":
             attackstat = attacker.spatk
             defensestat = defender.spdef
+
+        self.crit_hit(attacker)
+
+        crit_modifier = 2 if self.landed_crit else 1
         
         if self.power > 0:
-            damage = ((((2 * attacker.level / 5 + 2) * attackstat * self.power / defensestat) / 50) + 2) * Move.calc_stab(self, attacker) * Move.crit_hit(self, attacker) * Move.effectiveness(self, defender) * random.randint(85, 100) / 100
+            damage = ((((2 * (attacker.level * crit_modifier) / 5 + 2) * attackstat * self.power / defensestat) / 50) + 2) * Move.calc_stab(self, attacker) * Move.effectiveness(self, defender) * random.randint(85, 100) / 100
         else:
             damage = 0
 
         return int(damage)
 
+#!
     def apply_effects(self, defender):
         '''
         Checks if move applies any status effect to defending pokemon
@@ -205,13 +231,24 @@ class Move:
         if self.effect != "":
             Move.apply_effects(self, defender)
         damage = Move.calc_damage(self, attacker, defender)
-        # defender.transitionHP = defender.currentHP
-        defender.currentHP -= damage
-        if defender.currentHP < 0:
-            defender.currentHP = 0
+        #Chance to miss:
+        self.move_missed = False
+        Move.miss_check(self)
+        if not self.move_missed:
+            defender.currentHP -= damage
+            if defender.currentHP < 0:
+                defender.currentHP = 0
 
+#!
     def learn(self, pokemon):
         '''
         If Pokemon levels up and can learn a new move, add move to move_list if len < 4. if >= 4, ask to forget one move.
+        '''
+        pass
+
+#!
+    def forget(self, pokemon):
+        '''
+        If a Pokemon is trying to learn a new move but has 4 moves in move_list, forget a move first
         '''
         pass
