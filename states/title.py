@@ -14,5 +14,5 @@ class Title(State):
         self.game.reset_keys()
 
     def render(self, display):
-        display.fill((255,255,255))
+        display.fill((248,248,248))
         self.game.draw_text(display, "Pykemon", (0,0,0), self.game.GAME_W*0.35, self.game.GAME_H/2)

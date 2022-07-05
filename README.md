@@ -2,7 +2,7 @@
 A reimagining of Gen 1/Gen 2 Pokemon written entirely in Python
 
 ## Current Features:
-At this stage of development, Pykemon is a collection of building blocks which haven't been assembled yet. What I have accomplished for far includes:
+At this stage of development, Pykemon is just a battle screen with a basic fight sequence. What I have accomplished so far includes:
 
 ### Pokemon class:
 #### Fully implemented:
@@ -29,22 +29,33 @@ At this stage of development, Pykemon is a collection of building blocks which h
 #### Not Implemented:
 * Status effects
 * Held items
-* Move implementation
 
 ### Move Class:
 #### Fully Implemented:
 * Move will check types and return a modifier to be used in damage calculation
 * STAB (Same Type Attack Bonus) is determined if Pokemon uses a move that matches it's type
-* Damage is calculated by first determining if a move is special or physical. This will determine which Pokemon stats to reference. Then it follows the standard formula for damage calculation.
+* Damage is calculated by first determining if a move is special or physical. This will determine which Pokemon stats to reference. Then it follows the standard formula for damage calculation
+* Use a move - Pokemon uses move which then applies damage (if applicable)
+* Accuracy check - Pokemon has chance to miss if move accuracy is below 100
+* Critical hit chance - Pokemon has chance to land critical hit based on Gen 1 formula
 
 #### Partially Implemented:
-* Status Effects (will need major overhaul later on)
-* Use a move (essentially just applies damage)
-* Critial hit chance - currently based on attacker speed, but will use a percentage based on individual moves in the future
+*
 
 #### Not Implemented:
+
 * Proper status effects
-* Literally anything else
+* Any other features not mentioned
+
+### Trainer Class:
+#### Fully Implemented:
+* 
+
+#### Partially Implemented:
+* 
+
+#### Not Implemented:
+* Everything
 
 ### Main Game:
 
@@ -54,10 +65,14 @@ At this stage of development, Pykemon is a collection of building blocks which h
 * Pokemon names, level, current HP and max HP properly display
 * HP bars display proper colour and size based on remaining HP
 * XP bar works correctly and displays how far into current level a Pokemon is
+* Gender is shown with proper gender symbol
+* Player can either run or fight
+* Fight menu shows all moves known by Pokemon
+* Moves can be used, and pp will be reduced accurately
 
 #### Partially Implemented:
-* Gender is displayed with m or f. Will use proper symbols in the future
+*
 
 #### Not Implemented:
-* Any interaction with menus: choosing move, changing pokemon, opening bag, running away
-* 
+* pkmn menu option
+* pack menu option
