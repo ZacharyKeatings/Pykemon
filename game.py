@@ -33,9 +33,12 @@ class Game():
         self.load_assets()
         self.load_states()
         self.SCALE = 4
+        self.CLOCK = pygame.time.Clock()
+        self.FPS = 30
 
     def game_loop(self):
         while self.playing:
+            self.CLOCK.tick(self.FPS)
             self.get_dt()
             self.get_events()
             self.update()

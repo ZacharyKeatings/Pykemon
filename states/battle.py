@@ -264,7 +264,7 @@ class Battle(State):
 
     def draw_hp_bar(self, display, pokemon, x, y):
         def hp_bar_colour(pokemon):
-            ratio = pokemon.currentHP / pokemon.maxHP
+            ratio = pokemon.transitionHP / pokemon.maxHP
             if ratio > 0.5625:
                 return self.game.GREEN
             elif 0.5625 >= ratio > 0.29167:

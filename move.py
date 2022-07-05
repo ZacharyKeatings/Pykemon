@@ -228,13 +228,13 @@ class Move:
         calls a move.
         runs status effect check, if applicable. then applies damage, if applicable
         '''
-        if self.effect != "":
-            Move.apply_effects(self, defender)
-        damage = Move.calc_damage(self, attacker, defender)
         #Chance to miss:
         self.move_missed = False
         Move.miss_check(self)
         if not self.move_missed:
+            if self.effect != "":
+                Move.apply_effects(self, defender)
+            damage = Move.calc_damage(self, attacker, defender)
             defender.currentHP -= damage
             if defender.currentHP < 0:
                 defender.currentHP = 0
