@@ -184,11 +184,9 @@ class Move:
             attackstat = attacker.spatk
             defensestat = defender.spdef
 
-        self.crit_hit(attacker)
-
-        crit_modifier = 2 if self.landed_crit else 1
-        
         if self.power > 0:
+            self.crit_hit(attacker)
+            crit_modifier = 2 if self.landed_crit else 1
             damage = ((((2 * (attacker.level * crit_modifier) / 5 + 2) * attackstat * self.power / defensestat) / 50) + 2) * Move.calc_stab(self, attacker) * Move.effectiveness(self, defender) * random.randint(85, 100) / 100
         else:
             damage = 0
