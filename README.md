@@ -57,7 +57,7 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 #### Not Implemented:
 * Everything
 
-### Main Game:
+## Main Game:
 
 ### Battle State:
 #### Fully Implemented:
