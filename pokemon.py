@@ -56,6 +56,7 @@ class Pokemon:
         self.held_item = None
 
         #Status effects
+        self.status_counter = 0
         self.status_effect = False # Set to True if any other status effect is True
         self.paralyzed = False
         self.poisoned = False
@@ -311,7 +312,6 @@ class Pokemon:
         '''
         recalculates base stats based on new species
         '''
-        # self.moves = moves
         self.name = pkmn_dict[self.name]["Evolves-Into"]
         self.type = pkmn_dict[self.name]["Type"]
         self.pokedex_number = pkmn_dict[self.name]["Pokedex-Number"]
@@ -345,3 +345,7 @@ class Pokemon:
 
         #set pokemon moves with move_set:
         self.moves = move_set
+
+    def status_check(self, status):
+        if self.flinch:
+            self.flinch = False

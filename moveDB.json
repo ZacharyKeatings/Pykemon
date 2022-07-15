@@ -217,7 +217,7 @@
         "Priority": 0,
         "Description": "Has a 30% chance to make the target flinch.",
         "Effect": "Flinch",
-        "Effect-Rate": 30,
+        "Effect-Rate": 100,
         "Stat-Stage": 0
     },
     "Blizzard": {

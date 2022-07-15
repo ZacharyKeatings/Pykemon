@@ -26,9 +26,6 @@ class Move:
         self.landed_crit = False
         self.move_missed = False
 
-    def get_priority(self):
-        return self.priority
-
 #!
     def paralyzed(self, defender):
         '''
@@ -74,8 +71,8 @@ class Move:
         '''
         Pokemon cannot use move on their next turn.
         '''
-        print(f"{defender.name} Flinched!")#!------------------------------
-
+        defender.flinch = True
+        defender.status_effect = True
 #!
     def confused(self, defender):
         '''
@@ -107,7 +104,7 @@ class Move:
         pass
 
 #!
-    def raise_stat(self, defender):
+    def raise_stat(self, attacker):
         '''
         Increases stat of Pokemon
         '''
@@ -146,7 +143,8 @@ class Move:
 
         return stab
 
-#! Update Crit to calculate based on pokemon stat crit stage to work with stat modifier moves
+#! Update Crit to calculate based on pokemon stat 
+#! crit stage to work with stat modifier moves
     def crit_hit(self, attacker):
         self.crit_threshold = attacker.speed / 2
         if self.crit_threshold > 255:
@@ -165,7 +163,6 @@ class Move:
         else:
             self.move_missed = False
 
-#! Update to properly use critical hit
     def calc_damage(self, attacker, defender):
         '''
         ((((2 * Level / 5 + 2) * AttackStat * AttackPower / DefenseStat) / 50) + 2) * STAB * Weakness/Resistance * Random(85-100) / 100
@@ -199,27 +196,27 @@ class Move:
         Checks if move applies any status effect to defending pokemon
         '''
         chance = random.randint(0, 101)
-        if chance < move_dict[self.name]["Effect-Rate"]:
-            if move_dict[self.name]["Effect"] == "Paralyzed":
-                Move.paralyzed(self, defender)
-            if move_dict[self.name]["Effect"] == "Poisoned":
-                Move.poisoned(self, defender)
-            if move_dict[self.name]["Effect"] == "Badly_Poisoned":
-                Move.badly_poisoned(self, defender)
-            if move_dict[self.name]["Effect"] == "Burned":
-                Move.burned(self, defender)
-            if move_dict[self.name]["Effect"] == "Frozen":
-                Move.frozen(self, defender)
-            if move_dict[self.name]["Effect"] == "Flinch":
-                Move.flinch(self, defender)
-            if move_dict[self.name]["Effect"] == "Confused":
-                Move.confused(self, defender)
-            if move_dict[self.name]["Effect"] == "Infatuation":
-                Move.infatuation(self, defender)
-            if move_dict[self.name]["Effect"] == "Leech_Seed":
-                Move.leech_seed(self, defender)
-            if move_dict[self.name]["Effect"] == "Sleep":
-                Move.sleep(self, defender)
+        if chance < self.effect_rate:
+            if self.effect == "Paralyzed":
+                self.paralyzed(defender)
+            if self.effect == "Poisoned":
+                self.poisoned(defender)
+            if self.effect == "Badly_Poisoned":
+                self.badly_poisoned(defender)
+            if self.effect == "Burned":
+                self.burned(defender)
+            if self.effect == "Frozen":
+                self.frozen(defender)
+            if self.effect == "Flinch":
+                self.flinch(defender)
+            if self.effect == "Confused":
+                self.confused(defender)
+            if self.effect == "Infatuation":
+                self.infatuation(defender)
+            if self.effect == "Leech_Seed":
+                self.leech_seed(defender)
+            if self.effect == "Sleep":
+                self.sleep(defender)
 
     def use(self, attacker, defender):
         '''
@@ -228,23 +225,23 @@ class Move:
         '''
         #Chance to miss:
         self.move_missed = False
-        Move.miss_check(self)
+        self.miss_check()
         if not self.move_missed:
             if self.effect != "":
-                Move.apply_effects(self, defender)
-            damage = Move.calc_damage(self, attacker, defender)
+                self.apply_effects(defender)
+            damage = self.calc_damage(attacker, defender)
             defender.currentHP -= damage
             if defender.currentHP < 0:
                 defender.currentHP = 0
 
-#!
+#! should be in pokemon class
     def learn(self, pokemon):
         '''
         If Pokemon levels up and can learn a new move, add move to move_list if len < 4. if >= 4, ask to forget one move.
         '''
         pass
 
-#!
+#! should be in pokemon class
     def forget(self, pokemon):
         '''
         If a Pokemon is trying to learn a new move but has 4 moves in move_list, forget a move first
