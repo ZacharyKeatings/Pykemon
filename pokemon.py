@@ -346,6 +346,7 @@ class Pokemon:
         #set pokemon moves with move_set:
         self.moves = move_set
 
-    def status_check(self, status):
-        if self.flinch:
-            self.flinch = False
+    def apply_poison(self):
+        if self.poisoned:
+            damage = self.maxHP // 16
+            self.currentHP -= damage

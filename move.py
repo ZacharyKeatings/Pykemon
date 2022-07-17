@@ -25,20 +25,29 @@ class Move:
         self.crit_threshold = None
         self.landed_crit = False
         self.move_missed = False
+        self.applied_status = False
 
-#!
-    def paralyzed(self, defender):
+    def flinch(self, defender):
         '''
-        pokemon has 25% chance of not being able to attack.
-        Remains after battle ends.
+        Pokemon cannot use move on their next turn.
         '''
-        pass
+        defender.flinch = True
+        defender.status_effect = True
 
 #!
     def poisoned(self, defender):
         '''
         Pokemon loses 1/16 of maxHP each turn.
         Remains after battle ends. Pokemon loses 1 HP every 4 steps until (Pokemon has 1HP/Pokemon faints)
+        '''
+        defender.poisoned = True
+        defender.status_effect = True
+
+#!
+    def paralyzed(self, defender):
+        '''
+        pokemon has 25% chance of not being able to attack.
+        Remains after battle ends.
         '''
         pass
 
@@ -66,13 +75,6 @@ class Move:
         '''
         pass
 
-#!
-    def flinch(self, defender):
-        '''
-        Pokemon cannot use move on their next turn.
-        '''
-        defender.flinch = True
-        defender.status_effect = True
 #!
     def confused(self, defender):
         '''
@@ -200,6 +202,7 @@ class Move:
             if self.effect == "Paralyzed":
                 self.paralyzed(defender)
             if self.effect == "Poisoned":
+                self.applied_status = True
                 self.poisoned(defender)
             if self.effect == "Badly_Poisoned":
                 self.badly_poisoned(defender)
