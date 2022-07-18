@@ -25,9 +25,9 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 
 #### Partially Implemented:
 * A Pokemon can evolve by calling the evolve function. This will check the 'Evolves-Into' key within the PokemonDB.json file. Using this value, it changes the name of the Pokemon, then recalculates all base stats and current stats.
+* Status effects
 
 #### Not Implemented:
-* Status effects
 * Held items
 
 ### Move Class:
@@ -40,11 +40,10 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 * Critical hit chance - Pokemon has chance to land critical hit based on Gen 1 formula
 
 #### Partially Implemented:
-*
+* Status effects (poison, flinch)
 
 #### Not Implemented:
 
-* Proper status effects
 * Any other features not mentioned
 
 ### Trainer Class:
@@ -71,7 +70,7 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 * Moves can be used, and pp will be reduced accurately
 
 #### Partially Implemented:
-*
+* Status effect indicator (poisoned = PSN)
 
 #### Not Implemented:
 * pkmn menu option
