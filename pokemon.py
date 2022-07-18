@@ -50,7 +50,6 @@ class Pokemon:
         self.maxHP = Pokemon.calc_hp(self, self.base_hp, self.ivs['HP'], Pokemon.stat_point(self, self.hp_xp))
         self.currentHP = self.maxHP
         self.transitionHP = self.currentHP
-        self.evasion = 1
         self.wild = False
         self.traded = False
         self.held_item = None
@@ -68,6 +67,15 @@ class Pokemon:
         self.infatuation = False
         self.leech_seed = False
         self.sleep = False
+
+        #Stat stages in battle
+        self.attack_stage = 0
+        self.defense_stage = 0
+        self.speed_stage = 0
+        self.crit_stage = 0
+        self.spatk_stage = 0
+        self.spdef_stage = 0
+        self.evasion_stage = 0
 
         #!Images
         #back

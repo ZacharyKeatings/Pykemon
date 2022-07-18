@@ -25,7 +25,8 @@ class Move:
         self.crit_threshold = None
         self.landed_crit = False
         self.move_missed = False
-        self.applied_status = False
+
+        self.applied_poison = False
 
     def flinch(self, defender):
         '''
@@ -145,15 +146,24 @@ class Move:
 
         return stab
 
-#! Update Crit to calculate based on pokemon stat 
-#! crit stage to work with stat modifier moves
     def crit_hit(self, attacker):
-        self.crit_threshold = attacker.speed / 2
-        if self.crit_threshold > 255:
-            self.crit_threshold = 255
-        rand_num = random.randint(0, 256)
+        '''
+        This calculation uses the gen III-V formula
+        '''
 
-        if rand_num < self.crit_threshold:
+        if attacker.crit_stage == 0:
+            self.crit_threshold = 16
+        elif attacker.crit_stage == 1:
+            self.crit_threshold = 8
+        elif attacker.crit_stage == 2:
+            self.crit_threshold = 4
+        elif attacker.crit_stage == 3:
+            self.crit_threshold = 3
+        elif attacker.crit_stage <= 4:
+            self.crit_threshold = 2
+        rand_num = random.randint(1, self.crit_threshold)
+
+        if rand_num == self.crit_threshold:
             self.landed_crit = True
         else:
             self.landed_crit = False
@@ -202,7 +212,7 @@ class Move:
             if self.effect == "Paralyzed":
                 self.paralyzed(defender)
             if self.effect == "Poisoned":
-                self.applied_status = True
+                self.applied_poison = True
                 self.poisoned(defender)
             if self.effect == "Badly_Poisoned":
                 self.badly_poisoned(defender)

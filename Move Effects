@@ -1,6 +1,7 @@
 Lower-Attack
 Lower-SpDef
 Lower-Speed
+Lower-Def
 Raise-Def
 Raise-Crit
 Raise-Speed
@@ -15,3 +16,5 @@ Trap
 Flinch
 Freeze
 Paralyze
+Confusion
+Higher-Crit

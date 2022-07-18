@@ -130,9 +130,7 @@ class Battle(State):
                 self.selected_friend_move.curr_pp -= 1
                 self.friend_moved = True
 
-                print("friend used move")
                 if self.selected_friend_move.move_missed == True:
-                    print("friend missed")
                     self.menu_state = 'friend missed'
                 else:
                     if self.selected_friend_move.landed_crit:
@@ -149,7 +147,7 @@ class Battle(State):
                             self.menu_state = "foe flinched"
                         else:
                             self.menu_state = "foe flinched"
-                    elif self.selected_friend_move.applied_status:
+                    elif self.selected_friend_move.applied_poison:
                         self.menu_state = 'foe poisoned'
                     elif self.friend.status_effect:
                         if self.friend.poisoned:
