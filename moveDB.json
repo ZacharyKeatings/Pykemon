@@ -216,7 +216,7 @@
         "Accuracy": 100,
         "Priority": 0,
         "Description": "Has a 30% chance to make the target flinch.",
-        "Effect": "flinch",
+        "Effect": "Flinch",
         "Effect-Rate": 30,
         "Stat-Stage": 0
     },
@@ -351,7 +351,7 @@
         "Stat-Stage": 0
     },
     "Confuse Ray": {
-        "Type": "ghost",
+        "Type": "Ghost",
         "Damage-Class": "Physical",
         "PP": 10,
         "Max-PP": 16,
@@ -504,6 +504,84 @@
         "Description": "Inflicts regular damage with no additional effect.",
         "Effect": "",
         "Effect-Rate": 0,
+        "Stat-Stage": 0
+    },
+    "Defense Curl": {
+        "Type": "Normal",
+        "Damage-Class": "Physical",
+        "PP": 40,
+        "Max-PP": 64,
+        "Power": 0,
+        "Accuracy": 100,
+        "Priority": 0,
+        "Description": "Raises user's Defense by one stage.",
+        "Effect": "Raise-Def",
+        "Effect-Rate": 100,
+        "Stat-Stage": 1
+    },
+    "Destiny Bond": {
+        "Type": "Ghost",
+        "Damage-Class": "Physical",
+        "PP": 5,
+        "Max-PP": 8,
+        "Power": 0,
+        "Accuracy": 100,
+        "Priority": 0,
+        "Description": "If the user faints this turn, the target automatically will, too.",
+        "Effect": "Unique",
+        "Effect-Rate": 100,
+        "Stat-Stage": 0
+    },
+    "Detect": {
+        "Type": "Fight",
+        "Damage-Class": "Physical",
+        "PP": 5,
+        "Max-PP": 8,
+        "Power": 0,
+        "Accuracy": 100,
+        "Priority": 4,
+        "Description": "Prevents any moves from hitting the user this turn.",
+        "Effect": "Unique",
+        "Effect-Rate": 100,
+        "Stat-Stage": 0
+    },
+    "Dig": {
+        "Type": "Ground",
+        "Damage-Class": "Physical",
+        "PP": 10,
+        "Max-PP": 16,
+        "Power": 80,
+        "Accuracy": 100,
+        "Priority": 0,
+        "Description": "User digs underground, dodging all attacks, and hits next turn.",
+        "Effect": "",
+        "Effect-Rate": 0,
+        "Stat-Stage": 0
+    },
+    "Disable": {
+        "Type": "Normal",
+        "Damage-Class": "Physical",
+        "PP": 20,
+        "Max-PP": 32,
+        "Power": 0,
+        "Accuracy": 100,
+        "Priority": 0,
+        "Description": "Disables the target's last used move for 1-8 turns.",
+        "Effect": "Unique",
+        "Effect-Rate": 0,
+        "Stat-Stage": 0
+    },
+    "Dizzy Punch": {
+        "Type": "Normal",
+        "Damage-Class": "Physical",
+        "PP": 10,
+        "Max-PP": 16,
+        "Power": 70,
+        "Accuracy": 100,
+        "Priority": 0,
+        "Description": "Has a 20% chance to confuse the target.",
+        "Effect": "Confusion",
+        "Effect-Rate": 20,
         "Stat-Stage": 0
     },
 

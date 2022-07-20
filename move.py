@@ -27,6 +27,8 @@ class Move:
         self.move_missed = False
 
         self.applied_poison = False
+        self.applied_bad_poison = False
+        self.applied_burn = False
 
     def flinch(self, defender):
         '''
@@ -35,7 +37,6 @@ class Move:
         defender.flinch = True
         defender.status_effect = True
 
-#!
     def poisoned(self, defender):
         '''
         Pokemon loses 1/16 of maxHP each turn.
@@ -44,27 +45,28 @@ class Move:
         defender.poisoned = True
         defender.status_effect = True
 
-#!
-    def paralyzed(self, defender):
-        '''
-        pokemon has 25% chance of not being able to attack.
-        Remains after battle ends.
-        '''
-        pass
-
-#!
     def badly_poisoned(self, defender):
         '''
         Pokemon loses 1/16 of maxHP on first turn. Each sequential turn, add 1/16 of maxHP to damage.
         Becomes regular poison after battle ends. Pokemon loses 1 HP every 4 steps until (Pokemon has 1HP/Pokemon faints)
         '''
-        pass
+        defender.badly_poisoned = True
+        defender.status_effect = True
 
 #!
     def burned(self, defender):
         '''
         Pokemon loses 1/8 of maxHP at the end of each turn.
         Pokemon attack reduced by 50%.
+        '''
+        defender.burned = True
+        defender.status_effect = True
+
+#!
+    def paralyzed(self, defender):
+        '''
+        pokemon has 25% chance of not being able to attack.
+        Remains after battle ends.
         '''
         pass
 
@@ -214,9 +216,11 @@ class Move:
             if self.effect == "Poisoned":
                 self.applied_poison = True
                 self.poisoned(defender)
-            if self.effect == "Badly_Poisoned":
+            if self.effect == "Badly Poisoned":
+                self.applied_bad_poison = True
                 self.badly_poisoned(defender)
-            if self.effect == "Burned":
+            if self.effect == "Burn":
+                self.applied_burn = True
                 self.burned(defender)
             if self.effect == "Frozen":
                 self.frozen(defender)
@@ -226,7 +230,7 @@ class Move:
                 self.confused(defender)
             if self.effect == "Infatuation":
                 self.infatuation(defender)
-            if self.effect == "Leech_Seed":
+            if self.effect == "Leech Seed":
                 self.leech_seed(defender)
             if self.effect == "Sleep":
                 self.sleep(defender)
@@ -242,7 +246,12 @@ class Move:
         if not self.move_missed:
             if self.effect != "":
                 self.apply_effects(defender)
+            if attacker.burned:
+                original_attack = attacker.attack
+                attacker.attack /= 2
             damage = self.calc_damage(attacker, defender)
+            if attacker.burned:
+                attacker.attack = original_attack
             defender.currentHP -= damage
             if defender.currentHP < 0:
                 defender.currentHP = 0

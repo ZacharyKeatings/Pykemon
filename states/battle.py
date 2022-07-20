@@ -149,9 +149,15 @@ class Battle(State):
                             self.menu_state = "foe flinched"
                     elif self.selected_friend_move.applied_poison:
                         self.menu_state = 'foe poisoned'
+                    elif self.selected_friend_move.applied_burn:
+                        self.menu_state = 'foe burned'
                     elif self.friend.status_effect:
                         if self.friend.poisoned:
                             self.menu_state = 'friend hurt by poison'
+                        elif self.friend.badly_poisoned:
+                            self.menu_state = 'friend hurt by poison'
+                        elif self.friend.burned:
+                            self.menu_state = 'friend hurt by burn'
                     elif self.foe_moved is False:
                         self.menu_state = 'foe used move'
                     else:
@@ -181,13 +187,23 @@ class Battle(State):
                             self.menu_state = "friend flinched"
                         else:
                             self.menu_state = "friend flinched"
+                    elif self.selected_foe_move.applied_poison:
+                        self.menu_state = 'friend poisoned'
+                    elif self.selected_foe_move.applied_burn:
+                        self.menu_state = 'friend burned'
                     elif self.foe.status_effect:
                         if self.foe.poisoned:
                             self.menu_state = 'foe hurt by poison'
+                        elif self.foe.badly_poisoned:
+                            self.menu_state = 'foe hurt by poison'
+                        elif self.foe.burned:
+                            self.menu_state = 'foe hurt by burn'
                     elif self.friend_moved is False:
                         self.menu_state = 'friend used move'
                     else:
-                        self.menu_state = 'fight'
+                        self.menu_state = 'main'
+                        self.index = 0
+                        self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
             elif self.menu_state == 'friend critical hit':
                 # switch to move effectiveness, opponent move, or move menu
@@ -314,6 +330,39 @@ class Battle(State):
                     self.index = 0
                     self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
+            elif self.menu_state == 'friend burned':
+                self.menu_state = 'main'
+                self.index = 0
+                self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
+            elif self.menu_state == 'foe burned':
+                self.menu_state = 'main'
+                self.index = 0
+                self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
+            elif self.menu_state == 'foe hurt by burn':
+                self.foe.apply_burn()
+                if self.foe.is_fainted():
+                    self.menu_state = 'foe fainted'
+                elif self.friend_moved is False:
+                    self.menu_state = 'friend used move'
+                else:
+                    self.menu_state = 'main'
+                    self.index = 0
+                    self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
+            elif self.menu_state == 'friend hurt by burn':
+                self.friend.apply_burn()
+                # switch to  opponent move or move menu
+                if self.friend.is_fainted():
+                    self.menu_state = 'friend fainted'
+                elif self.foe_moved is False:
+                    self.menu_state = 'foe used move'
+                else:
+                    self.menu_state = 'main'
+                    self.index = 0
+                    self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
             elif self.menu_state == 'friend fainted':
                 self.menu_state = 'main'
                 self.index = 0
@@ -372,6 +421,22 @@ class Battle(State):
         elif self.menu_state == 'foe poisoned':
             self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
             self.game.draw_text(display, f"was poisoned!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'friend hurt by burn':
+            self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"was hurt by it's burn!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'foe hurt by burn':
+            self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"was hurt by it's burn!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'friend burned':
+            self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"was burned!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'foe burned':
+            self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"was burned!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
         
         elif self.menu_state == 'friend used move':
             self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
@@ -465,8 +530,10 @@ class Battle(State):
         self.game.draw_text(display, gender, self.game.BLACK, x, y)
 
     def draw_status(self, display, pokemon, x, y):
-        if pokemon.poisoned:
+        if pokemon.poisoned or pokemon.badly_poisoned:
             status = "PSN"
+        elif pokemon.burned:
+            status = "BRN"
         else:
             status = ""
         self.game.draw_text(display, status, self.game.BLACK, x, y)

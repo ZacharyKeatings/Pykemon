@@ -358,3 +358,19 @@ class Pokemon:
         if self.poisoned:
             damage = self.maxHP // 16
             self.currentHP -= damage
+
+        elif self.badly_poisoned:
+            self.status_counter += 1
+            if self.status_counter > 15:
+                self.status_counter = 15
+            damage = self.maxHP // (16 // self.status_counter)
+            if damage < 1:
+                damage = 1
+                self.currentHP -= damage
+            else:
+                self.currentHP -= damage
+
+    def apply_burn(self):
+        if self.burned:
+            damage = self.maxHP // 8
+            self.currentHP -= damage
