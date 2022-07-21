@@ -53,7 +53,6 @@ class Move:
         defender.badly_poisoned = True
         defender.status_effect = True
 
-#!
     def burned(self, defender):
         '''
         Pokemon loses 1/8 of maxHP at the end of each turn.
@@ -68,7 +67,8 @@ class Move:
         pokemon has 25% chance of not being able to attack.
         Remains after battle ends.
         '''
-        pass
+        defender.paralyzed = True
+        defender.status_effect = True
 
 #!
     def frozen(self, defender):

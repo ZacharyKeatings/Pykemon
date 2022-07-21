@@ -111,6 +111,19 @@ class Battle(State):
                                 self.foe.status_effect = False
                                 self.friend_moved = True
                                 self.menu_state = 'foe used move'
+                            elif self.friend.paralyzed:
+                                rand_num = random.randint(0, 3)
+                                if rand_num == 0:
+                                    self.friend_moved = True
+                                    self.menu_state = 'friend paralyzed'
+                                else:
+                                    self.menu_state = 'friend used move'
+                            elif self.friend.burned:
+                                self.menu_state = 'friend used move'
+                            elif self.friend.poisoned:
+                                self.menu_state = 'friend used move'
+                            elif self.friend.badly_poisoned:
+                                self.menu_state = 'friend used move'
                         else:
                             self.menu_state = 'friend used move'
 
@@ -121,6 +134,19 @@ class Battle(State):
                                 self.foe.status_effect = False
                                 self.foe_moved = True
                                 self.menu_state = 'friend used move'
+                            elif self.foe.paralyzed:
+                                rand_num = random.randint(0, 3)
+                                if rand_num == 0:
+                                    self.foe_moved = True
+                                    self.menu_state = 'foe paralyzed'
+                                else:
+                                    self.menu_state = 'foe used move'
+                            elif self.foe.burned:
+                                self.menu_state = 'foe used move'
+                            elif self.foe.poisoned:
+                                self.menu_state = 'foe used move'
+                            elif self.foe.badly_poisoned:
+                                self.menu_state = 'foe used move'
                         else:
                             self.menu_state = 'foe used move'
 
@@ -159,7 +185,15 @@ class Battle(State):
                         elif self.friend.burned:
                             self.menu_state = 'friend hurt by burn'
                     elif self.foe_moved is False:
-                        self.menu_state = 'foe used move'
+                        if self.foe.paralyzed:
+                            rand_num = random.randint(0, 3)
+                            if rand_num == 0:
+                                self.foe_moved = True
+                                self.menu_state = 'foe paralyzed'
+                            else:
+                                self.menu_state = 'foe used move'
+                        else:
+                            self.menu_state = 'foe used move'
                     else:
                         self.menu_state = 'main'
                         self.index = 0
@@ -199,7 +233,15 @@ class Battle(State):
                         elif self.foe.burned:
                             self.menu_state = 'foe hurt by burn'
                     elif self.friend_moved is False:
-                        self.menu_state = 'friend used move'
+                        if self.friend.paralyzed:
+                            rand_num = random.randint(0, 3)
+                            if rand_num == 0:
+                                self.friend_moved = True
+                                self.menu_state = 'friend paralyzed'
+                            else:
+                                self.menu_state = 'friend used move'
+                        else:
+                            self.menu_state = 'friend used move'
                     else:
                         self.menu_state = 'main'
                         self.index = 0
@@ -289,6 +331,22 @@ class Battle(State):
                     self.menu_state = 'fight'
 
             elif self.menu_state == 'foe flinched':
+                # switch to  opponent move or move menu
+                if self.foe.is_fainted():
+                    self.menu_state = 'foe fainted'
+                else:
+                    self.menu_state = 'main'
+                    self.index = 0
+                    self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
+            elif self.menu_state == 'friend paralyzed':
+                # switch to  opponent move or move menu
+                if self.friend.is_fainted():
+                    self.menu_state = 'friend fainted'
+                else:
+                    self.menu_state = 'fight'
+
+            elif self.menu_state == 'foe paralyzed':
                 # switch to  opponent move or move menu
                 if self.foe.is_fainted():
                     self.menu_state = 'foe fainted'
