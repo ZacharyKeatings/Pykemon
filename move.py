@@ -61,7 +61,6 @@ class Move:
         defender.burned = True
         defender.status_effect = True
 
-#!
     def paralyzed(self, defender):
         '''
         pokemon has 25% chance of not being able to attack.
