@@ -29,6 +29,7 @@ class Move:
         self.applied_poison = False
         self.applied_bad_poison = False
         self.applied_burn = False
+        self.applied_paralyzed = False
 
     def flinch(self, defender):
         '''
@@ -67,7 +68,7 @@ class Move:
         Remains after battle ends.
         '''
         defender.paralyzed = True
-        defender.status_effect = True
+        # defender.status_effect = True
 
 #!
     def frozen(self, defender):
@@ -211,6 +212,7 @@ class Move:
         chance = random.randint(0, 101)
         if chance < self.effect_rate:
             if self.effect == "Paralyzed":
+                self.applied_paralyzed = True
                 self.paralyzed(defender)
             if self.effect == "Poisoned":
                 self.applied_poison = True

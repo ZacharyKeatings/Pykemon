@@ -77,6 +77,7 @@ class Battle(State):
         #!-------------------
 
     def update(self, delta_time, actions):
+        # print(f"{self.menu_state=}")
         self.update_cursor(actions)
         if actions['select']:
             if self.menu_state == 'main':
@@ -207,12 +208,16 @@ class Battle(State):
                 if self.selected_foe_move.move_missed == True:
                     self.menu_state = 'foe missed'
                 else:
+
                     if self.selected_foe_move.landed_crit:
                         self.menu_state = 'foe critical hit'
+
                     elif self.selected_foe_move.effectiveness(self.friend) != 1:
                         self.menu_state = 'foe effectiveness'
+
                     elif self.friend.is_fainted():
                         self.menu_state = 'friend fainted'
+
                     elif self.friend.flinch:
                         if self.friend_moved is False:
                             self.friend.flinch = False
@@ -221,10 +226,12 @@ class Battle(State):
                             self.menu_state = "friend flinched"
                         else:
                             self.menu_state = "friend flinched"
+
                     elif self.selected_foe_move.applied_poison:
                         self.menu_state = 'friend poisoned'
                     elif self.selected_foe_move.applied_burn:
                         self.menu_state = 'friend burned'
+
                     elif self.foe.status_effect:
                         if self.foe.poisoned:
                             self.menu_state = 'foe hurt by poison'
@@ -232,6 +239,7 @@ class Battle(State):
                             self.menu_state = 'foe hurt by poison'
                         elif self.foe.burned:
                             self.menu_state = 'foe hurt by burn'
+                        
                     elif self.friend_moved is False:
                         if self.friend.paralyzed:
                             rand_num = random.randint(0, 3)
@@ -480,6 +488,14 @@ class Battle(State):
             self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
             self.game.draw_text(display, f"was poisoned!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
 
+        elif self.menu_state == 'friend paralyzed':
+            self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"is paralyzed!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'foe paralyzed':
+            self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, f"is paralyzed!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
         elif self.menu_state == 'friend hurt by burn':
             self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
             self.game.draw_text(display, f"was hurt by it's burn!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
@@ -592,6 +608,8 @@ class Battle(State):
             status = "PSN"
         elif pokemon.burned:
             status = "BRN"
+        elif pokemon.paralyzed:
+            status = "PAR"
         else:
             status = ""
         self.game.draw_text(display, status, self.game.BLACK, x, y)
