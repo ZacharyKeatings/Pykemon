@@ -182,7 +182,10 @@ class Battle(State):
                     elif self.foe.frozen:
                         self.foe_moved = True
                         rand_num = random.randint(0, 4)
-                        if rand_num == 0:
+                        if self.selected_friend_move.type == "Fire":
+                            self.foe.frozen = False
+                            self.menu_state = 'foe frozen'
+                        elif rand_num == 0:
                             self.foe.frozen = False
                             self.menu_state = 'foe frozen'
                         else:
@@ -249,7 +252,10 @@ class Battle(State):
                     elif self.friend.frozen:
                         self.friend_moved = True
                         rand_num = random.randint(0, 4)
-                        if rand_num == 0:
+                        if self.selected_foe_move.type == "Fire":
+                            self.foe.frozen = False
+                            self.menu_state = 'friend frozen'
+                        elif rand_num == 0:
                             self.friend.frozen = False
                             self.menu_state = 'friend frozen'
                         else:

@@ -70,9 +70,8 @@ class Move:
         Remains after battle ends.
         '''
         defender.paralyzed = True
-        # defender.status_effect = True
 
-#!
+#! - Add fire-type attack check
     def frozen(self, defender):
         '''
         Pokemon cannot attack, but has 20% chance each turn to remove effect.
