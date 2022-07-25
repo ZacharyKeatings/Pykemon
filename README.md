@@ -40,7 +40,7 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 * Critical hit chance - Pokemon has chance to land critical hit based on Gen 1 formula
 
 #### Partially Implemented:
-* Status effects (poisoned, flinch, badly poisoned, burned, paralyzed)
+* Status effects (poisoned, flinch, badly poisoned, burned, paralyzed, frozen)
 
 #### Not Implemented:
 
@@ -70,7 +70,7 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 * Moves can be used, and pp will be reduced accurately
 
 #### Partially Implemented:
-* Status effect indicator (poisoned = PSN, burned = BRN, paralyzed = "PAR")
+* Status effect indicator (poisoned = PSN, burned = BRN, paralyzed = PAR, frozen = FRZ)
 
 #### Not Implemented:
 * pkmn menu option
