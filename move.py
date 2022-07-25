@@ -30,6 +30,8 @@ class Move:
         self.applied_bad_poison = False
         self.applied_burn = False
         self.applied_paralyzed = False
+        self.applied_frozen = False
+
 
     def flinch(self, defender):
         '''
@@ -76,7 +78,7 @@ class Move:
         Pokemon cannot attack, but has 20% chance each turn to remove effect.
         If pokemon attacked with Fire-type move, will remove effect.
         '''
-        pass
+        defender.frozen = True
 
 #!
     def confused(self, defender):
@@ -223,7 +225,8 @@ class Move:
             if self.effect == "Burn":
                 self.applied_burn = True
                 self.burned(defender)
-            if self.effect == "Frozen":
+            if self.effect == "Freeze":
+                self.applied_frozen = True
                 self.frozen(defender)
             if self.effect == "Flinch":
                 self.flinch(defender)
