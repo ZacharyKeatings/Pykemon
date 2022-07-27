@@ -125,6 +125,13 @@ class Battle(State):
                                 self.menu_state = 'friend paralyzed'
                             else:
                                 self.menu_state = 'friend used move'
+                        elif self.friend.confused:
+                            self.friend.status_counter -= 1
+                            if self.friend.status_counter == 0:
+                                #!Confused no more
+                                self.menu_state = 'friend confused no more'
+                            else:
+                                self.menu_state = 'friend is confused'
                         else:
                             self.menu_state = 'friend used move'
 
@@ -148,6 +155,13 @@ class Battle(State):
                                 self.menu_state = 'foe paralyzed'
                             else:
                                 self.menu_state = 'foe used move'
+                        elif self.foe.confused:
+                            self.foe.status_counter -= 1
+                            if self.foe.status_counter == 0:
+                                #!Confused no more
+                                self.menu_state = 'foe confused no more'
+                            else:
+                                self.menu_state = 'foe is confused'
                         else:
                             self.menu_state = 'foe used move'
 
@@ -214,6 +228,13 @@ class Battle(State):
                                 self.menu_state = 'foe paralyzed'
                             else:
                                 self.menu_state = 'foe used move'
+                        elif self.foe.confused:
+                            self.foe.status_counter -= 1
+                            if self.foe.status_counter == 0:
+                                #!Confused no more
+                                self.menu_state = 'foe confused no more'
+                            else:
+                                self.menu_state = 'foe is confused'
                         else:
                             self.menu_state = 'foe used move'
 
@@ -284,6 +305,13 @@ class Battle(State):
                                 self.menu_state = 'friend paralyzed'
                             else:
                                 self.menu_state = 'friend used move'
+                        elif self.friend.confused:
+                            self.friend.status_counter -= 1
+                            if self.friend.status_counter == 0:
+                                #!Confused no more
+                                self.menu_state = 'friend confused no more'
+                            else:
+                                self.menu_state = 'friend is confused'
                         else:
                             self.menu_state = 'friend used move'
 
@@ -476,6 +504,48 @@ class Battle(State):
                     self.index = 0
                     self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
 
+            elif self.menu_state == 'friend is confused':
+                rand_num = random.randint(0, 1)
+                if rand_num == 0:
+                    self.menu_state = 'friend hurt itself in confusion'
+                else:
+                    self.menu_state = 'friend used move'
+
+            elif self.menu_state == 'foe is confused':
+                rand_num = random.randint(0, 1)
+                if rand_num == 0:
+                    self.menu_state = 'foe hurt itself in confusion'
+                else:
+                    self.menu_state = 'foe used move'
+
+            elif self.menu_state == 'friend hurt itself in confusion':
+                self.friend.apply_confusion()
+                if self.friend.is_fainted():
+                    self.menu_state = 'friend fainted'
+                elif self.foe_moved is False:
+                    self.menu_state = 'foe used move'
+                else:
+                    self.menu_state = 'main'
+                    self.index = 0
+                    self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
+            elif self.menu_state == 'foe hurt itself in confusion':
+                self.foe.apply_confusion()
+                if self.foe.is_fainted():
+                    self.menu_state = 'foe fainted'
+                elif self.friend_moved is False:
+                    self.menu_state = 'friend used move'
+                else:
+                    self.menu_state = 'main'
+                    self.index = 0
+                    self.cursor_rect.x, self.cursor_rect.y = self.scaled_main_battle_menu_rect.x + (8 * self.game.SCALE), self.scaled_main_battle_menu_rect.y + (14 * self.game.SCALE)
+
+            elif self.menu_state == 'friend confused no more':
+                self.menu_state = 'friend used move'
+
+            elif self.menu_state == 'foe confused no more':
+                self.menu_state = 'foe used move'
+
             elif self.menu_state == 'friend fainted':
                 self.menu_state = 'main'
                 self.index = 0
@@ -599,6 +669,26 @@ class Battle(State):
         
         elif self.menu_state == 'foe flinched':
             self.game.draw_text(display, f"{self.foe.name.upper()} flinched!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+
+        elif self.menu_state == 'friend is confused':
+            self.game.draw_text(display, f"{self.friend.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, "is confused!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'foe is confused':
+            self.game.draw_text(display, f"Enemy {self.foe.name.upper()}", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, "is confused!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'friend hurt itself in confusion' or self.menu_state == 'foe hurt itself in confusion':
+            self.game.draw_text(display, "It hurt itself in", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, "its confusion!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'friend confused no more':
+            self.game.draw_text(display, f"{self.friend.name.upper()}'s", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, "confused no more!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
+
+        elif self.menu_state == 'foe confused no more':
+            self.game.draw_text(display, f"Enemy {self.foe.name.upper()}'s", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))
+            self.game.draw_text(display, "confused no more!", self.game.BLACK, (9*self.game.SCALE),  (128*self.game.SCALE))
 
         elif self.menu_state == 'no pp left':
             self.game.draw_text(display, "No pp left!", self.game.BLACK, (9*self.game.SCALE),  (112*self.game.SCALE))

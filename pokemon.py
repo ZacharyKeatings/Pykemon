@@ -374,3 +374,9 @@ class Pokemon:
         if self.burned:
             damage = self.maxHP // 8
             self.currentHP -= damage
+
+    def apply_confusion(self):
+        if self.confused:
+            damage = ((((2 * (self.level) / 5 + 2) * self.attack * 40 / self.defense) / 50) + 2) * random.randint(85, 100) / 100
+            self.currentHP -= damage
+            print(int(damage))

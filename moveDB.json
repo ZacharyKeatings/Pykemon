@@ -216,8 +216,8 @@
         "Accuracy": 100,
         "Priority": 0,
         "Description": "Has a 30% chance to make the target flinch.",
-        "Effect": "Freeze",
-        "Effect-Rate": 100,
+        "Effect": "Flinch",
+        "Effect-Rate": 30,
         "Stat-Stage": 0
     },
     "Blizzard": {

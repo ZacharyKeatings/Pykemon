@@ -71,7 +71,6 @@ class Move:
         '''
         defender.paralyzed = True
 
-#! - Add fire-type attack check
     def frozen(self, defender):
         '''
         Pokemon cannot attack, but has 20% chance each turn to remove effect.
@@ -82,10 +81,11 @@ class Move:
 #!
     def confused(self, defender):
         '''
-        Pokemon has 50% chance of hurting themselves between 1-4 turns.
+        Pokemon has 50% chance of hurting themselves between 2-5 turns.
         Pokemon can be confused along with other effects.
         '''
-        pass
+        defender.status_counter = random.randint(2, 5)
+        defender.confused = True
 
 #!
     def infatuation(self, defender):
@@ -229,6 +229,7 @@ class Move:
                 self.frozen(defender)
             if self.effect == "Flinch":
                 self.flinch(defender)
+
             if self.effect == "Confused":
                 self.confused(defender)
             if self.effect == "Infatuation":
