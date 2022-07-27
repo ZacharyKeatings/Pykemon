@@ -66,7 +66,7 @@ class Pokemon:
         self.confused = False # Only status that can be True while self.status_effect is True
         self.infatuation = False
         self.leech_seed = False
-        self.sleep = False
+        self.asleep = False
 
         #Stat stages in battle
         self.attack_stage = 0

@@ -78,7 +78,6 @@ class Move:
         '''
         defender.frozen = True
 
-#!
     def confused(self, defender):
         '''
         Pokemon has 50% chance of hurting themselves between 2-5 turns.
@@ -86,6 +85,13 @@ class Move:
         '''
         defender.status_counter = random.randint(2, 5)
         defender.confused = True
+
+    def sleep(self, defender):
+        '''
+        Pokemon is asleep and cannot use any move between 1 - 7 turns.
+        '''
+        defender.status_counter = random.randint(1, 7)
+        defender.asleep = True
 
 #!
     def infatuation(self, defender):
@@ -103,13 +109,6 @@ class Move:
         pass
 
 #!
-    def sleep(self, defender):
-        '''
-        Pokemon is asleep and cannot use any move between 1 - 7 turns.
-        '''
-        pass
-
-#!
     def raise_stat(self, attacker):
         '''
         Increases stat of Pokemon
@@ -122,6 +121,8 @@ class Move:
         Decreases stat of Pokemon
         '''
         pass
+
+
 
     def effectiveness(self, defender):
         '''
