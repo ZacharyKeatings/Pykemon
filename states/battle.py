@@ -816,6 +816,8 @@ class Battle(State):
             status = "PAR"
         elif pokemon.frozen:
             status = "FRZ"
+        elif pokemon.asleep:
+            status = "SLP"
         else:
             status = ""
         self.game.draw_text(display, status, self.game.BLACK, x, y)
