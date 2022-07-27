@@ -40,7 +40,7 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 * Critical hit chance - Pokemon has chance to land critical hit based on Gen 1 formula
 
 #### Partially Implemented:
-* Status effects (poisoned, flinch, badly poisoned, burned, paralyzed, frozen)
+* Status effects (poisoned, flinch, badly poisoned, burned, paralyzed, frozen, confusion)
 
 #### Not Implemented:
 
@@ -64,6 +64,7 @@ At this stage of development, Pykemon is just a battle screen with a basic fight
 * Pokemon names, level, current HP and max HP properly display
 * HP bars display proper colour and size based on remaining HP
 * XP bar works correctly and displays how far into current level a Pokemon is
+* HP and XP bars animate properly
 * Gender is shown with proper gender symbol
 * Player can either run or fight
 * Fight menu shows all moves known by Pokemon
